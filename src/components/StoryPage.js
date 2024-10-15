@@ -141,7 +141,7 @@ const StoryPage = ({ chapters, userName }) => {
                 loadedImages[currentPage] ? (
                   <img 
                     src={currentChapter.imageUrl} 
-                    alt={`Image for ${currentChapter.title}`} 
+                    alt={`${currentChapter.title}`} 
                   />
                 ) : (
                   <div className="loading-image">Loading image...</div>

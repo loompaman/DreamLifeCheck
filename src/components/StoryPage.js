@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/StoryPage.css';
-import FancyFrame from './FancyFrame';
-import tempImage from '../assets/images/temp.webp'; // Keep this as a fallback
 
 const StoryPage = ({ chapters, userName }) => {
   const [currentPage, setCurrentPage] = useState(0);

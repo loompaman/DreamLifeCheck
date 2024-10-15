@@ -1,25 +1,43 @@
-import logo from './logo.svg';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import HomePage from './routes/HomePage';
+import StorybookPage from './routes/StorybookPage';
 import './App.css';
+import ReactGA from 'react-ga';
 
 function App() {
+  useEffect(() => {
+    ReactGA.initialize('G-23B2G0CQKQ'); // Replace with your Measurement ID
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <TrackPageView />
+      <div className="App">
+        <Header />
+        <main>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/storybook" element={<StorybookPage />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
   );
 }
+
+const TrackPageView = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    ReactGA.set({ page: location.pathname });
+    ReactGA.pageview(location.pathname);
+  }, [location]);
+
+  return null;
+};
 
 export default App;

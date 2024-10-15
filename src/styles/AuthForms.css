@@ -1,0 +1,157 @@
+.auth-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.auth-form {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.auth-form h2 {
+  margin-bottom: 1.5rem;
+  font-size: 2.5rem;
+  color: #333;
+  font-weight: bold;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #00a86b;
+  font-size: 1rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #00a86b;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.continue-button {
+  width: 100%;
+  padding: 1rem;
+  background-color: #00a86b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.auth-switch {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.auth-switch button {
+  background: none;
+  border: none;
+  color: #00a86b;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.error-message {
+  color: #ff4444;
+  background-color: #ffe5e5;
+  border: 1px solid #ff4444;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}
+
+.close-button:hover {
+  background-color: #f0f0f0;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #ccc;
+}
+
+.auth-divider span {
+  padding: 0 10px;
+  color: #777;
+  font-size: 14px;
+}
+
+.social-auth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.social-auth-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  background-color: white;
+}
+
+.social-auth-button img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.switch-auth-button {
+  background: none;
+  border: none;
+  color: #00a86b;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  margin-top: 10px;
+}
+
+.switch-auth-button:hover {
+  color: #008f5b;
+}

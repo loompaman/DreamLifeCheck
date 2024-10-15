@@ -2,6 +2,11 @@
   "version": 2,
   "routes": [
     { "src": "/api/generate-story", "dest": "/api/generate-story.js" }
-  ]
+  ],
+  "functions": {
+    "api/generate-story.js": {
+      "maxDuration": 60
+    }
+  }
 }
 

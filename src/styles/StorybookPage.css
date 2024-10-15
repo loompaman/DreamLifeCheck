@@ -347,3 +347,25 @@ body, html {
   overflow-y: auto; /* Allow scrolling within the frame */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
+
+.dream-career-input {
+  min-height: 80px; /* Set a minimum height */
+  font-size: 16px;
+  padding: 10px 15px;
+  resize: vertical; /* Allow vertical resizing */
+}
+
+/* If you want to make it wider as well, you can add: */
+.dream-career-input {
+  width: 100%; /* Make it full width of its container */
+  max-width: 500px; /* Set a maximum width if desired */
+}
+
+/* For mobile devices, you might want to adjust the size: */
+@media (max-width: 768px) {
+  .dream-career-input {
+    height: 40px;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+}

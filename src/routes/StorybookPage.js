@@ -60,7 +60,7 @@ const StorybookPage = () => {
     };
 
     try {
-      const response = await fetch('https://dreamlifecheck.pages.dev/api/generate-story', {
+      const response = await fetch('https://localhost:3001/api/generate-story', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ const StorybookPage = () => {
   }
 
   return (
-    <div className="storybook-page">
+    <div className="page-background">
       <div className="content-wrapper">
         <FancyFrame>
           <div className="storybook-content">
@@ -141,15 +141,16 @@ const StorybookPage = () => {
                   <h2>Your Dream Life</h2>
                   <div className="form-group">
                     <label htmlFor="career">What's your dream career?</label>
-                    <input 
-                      type="text" 
+                    <textarea 
                       id="career" 
                       name="career" 
+                      className="dream-career-input"
+                      placeholder="e.g., Successful entrepreneur"
+                      rows="3"
                       value={formData.career}
                       onChange={handleInputChange}
-                      placeholder="e.g., Successful entrepreneur" 
                       required
-                    />
+                    ></textarea>
                   </div>
                   <div className="form-group">
                     <label htmlFor="work_environment">Describe your ideal work environment:</label>

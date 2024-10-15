@@ -62,6 +62,10 @@ const StoryPage = ({ chapters, userName }) => {
 
   const currentChapter = chapters[currentPage] || { title: '', content: '' };
 
+  const openStripeLink = () => {
+    window.open('https://buy.stripe.com/3cs02EgId0OV49O8wB', '_blank', 'noopener,noreferrer');
+  };
+
   const popupContents = {
     steps: (
       <>
@@ -150,6 +154,10 @@ const StoryPage = ({ chapters, userName }) => {
                 <div className="empty-page">
                   <p>Now that you've seen what your dream life looks like, it's time to make it a reality.</p>
                   <p>Thank you for reading!</p>
+
+                  <button className="final-page-button" onClick={openStripeLink}>
+                    📖 I want a more detailed Storybook with better images
+                    </button>
                 </div>
               )}
             </div>

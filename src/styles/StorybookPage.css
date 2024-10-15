@@ -15,10 +15,11 @@ body, html {
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
+  padding: 10px;
+  overflow-y: auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
   position: relative;
 }
 
@@ -33,7 +34,7 @@ body, html {
   text-align: center;
   color: black;
   width: 100%;
-  padding: 2vmin;
+  padding: 10px;
 }
 
 .storybook-content h1 {
@@ -65,13 +66,13 @@ body, html {
 }
 
 .form-group {
-  margin-bottom: 3vh;
+  margin-bottom: 15px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 1vh;
-  font-size: clamp(0.8rem, 2vw, 1rem);
+  margin-bottom: 5px;
+  font-size: 14px;
 }
 
 .form-group select {
@@ -103,7 +104,7 @@ body, html {
 /* Smaller placeholder text */
 .form-group input::placeholder,
 .form-group textarea::placeholder {
-  font-size: 11px; /* Adjust this value to make the placeholder text smaller */
+  font-size: 12px; /* Adjust this value to make the placeholder text smaller */
   color: #999; /* Light gray color for placeholder text */
 }
 
@@ -131,7 +132,7 @@ body, html {
 /* Adjust font size for mobile devices */
 @media (max-width: 768px) {
   .storybook-page {
-    padding: 2vw;
+    padding: 5px;
     align-items: flex-start;
     padding-top: 3vh;
   }
@@ -198,102 +199,29 @@ body, html {
 
 .content-wrapper {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 0;
+}
+
+.fancyFrameContents {
+  padding: 10px;
+  overflow-y: auto;
+  max-height: none;
 }
 
 .storybook-content {
-  color: #333;
-}
-
-.storybook-content h1 {
-  margin-bottom: 20px;
-}
-
-.storybook-description {
-  margin-bottom: 30px;
-}
-
-.story-form h2 {
-  margin-bottom: 15px;
-}
-
-.form-group {
-  margin-bottom: 20px;
-  text-align: left;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.form-group select,
-.form-group input[type="text"],
-.form-group textarea {
-  width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-.form-group textarea {
-  resize: vertical;
-}
-
-.submit-container {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.submit-button {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  font-size: 18px;
-  font-weight: bold;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.submit-button:hover {
-  background-color: #45a049;
-}
-
-.submit-container {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.submit-button {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  font-size: 18px;
-  font-weight: bold;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.submit-button:hover {
-  background-color: #45a049;
 }
 
 .input-type-selector {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .input-type-button {
-  padding: 10px 20px;
-  margin: 0 10px;
-  font-size: 16px;
+  padding: 8px 12px;
+  font-size: 14px;
   background-color: #f0f0f0;
   border: 2px solid #4CAF50;
   border-radius: 5px;
@@ -311,5 +239,47 @@ body, html {
 }
 
 .input-type-button.active:hover {
+  background-color: #45a049;
+}
+
+.submit-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.submit-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #45a049;
+}
+
+.submit-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.submit-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
   background-color: #45a049;
 }

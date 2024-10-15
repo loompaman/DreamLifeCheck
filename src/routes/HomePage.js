@@ -5,9 +5,6 @@ import '../styles/HomePage.css';
 const HomePage = () => {
   const navigate = useNavigate();
 
-  const handleSeeMyDreamLife = () => {
-    navigate('/storybook');
-  };
 
   return (
     <div className="home-page">

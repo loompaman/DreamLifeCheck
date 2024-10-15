@@ -10,16 +10,15 @@ body, html {
 }
 
 .storybook-page {
+  min-height: 100vh;
+  padding: 60px 10px 20px; /* Top padding for header, side padding, and bottom padding */
+  display: flex;
+  flex-direction: column;
   background-image: url('../assets/images/clouds.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  padding-top: 80px; /* Increase this value as needed */
+  background-attachment: fixed;
 }
 
 .fancy-frame-container {
@@ -197,8 +196,11 @@ body, html {
 }
 
 .content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  max-width: 1200px;
+  max-width: 600px; /* Adjust based on your preference */
   margin: 0 auto;
 }
 
@@ -316,6 +318,29 @@ body, html {
 
 @media (max-width: 768px) {
   .storybook-page {
-    padding-top: 60px; /* Slightly less padding for mobile */
+    padding-top: 50px; /* Adjust based on your header height */
   }
+
+  .storybook-content {
+    padding: 10px;
+  }
+}
+
+.fancyFrame {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Hide overflow */
+}
+
+.fancyFrameContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.fancyFrameContents {
+  flex: 1;
+  overflow-y: auto; /* Allow scrolling within the frame */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }

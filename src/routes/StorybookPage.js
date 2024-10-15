@@ -60,7 +60,7 @@ const StorybookPage = () => {
     };
 
     try {
-      const response = await fetch('https://localhost:3001/api/generate-story', {
+      const response = await fetch('https://dreamlifecheck.pages.dev/api/generate-story', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

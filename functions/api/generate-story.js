@@ -7,113 +7,120 @@ import { createClient } from '@supabase/supabase-js';
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 5000; // 5 seconds
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "https://dreamlifecheck.com",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
 export async function onRequest(context) {
-  // CORS headers
-  const headers = {
-    'Access-Control-Allow-Origin': 'https://www.dreamlifecheck.com',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Allow-Credentials': 'true',
-  };
-
-  // Handle preflight request
-  if (context.request.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers });
-  }
-
-  if (context.request.method !== 'POST') {
-    return new Response('Method Not Allowed', { status: 405, headers });
-  }
-
-  try {
-    const { inputType, answers } = await context.request.json();
-
-    // Initialize API clients
-    const openai = new OpenAI({ apiKey: context.env.OPENAI_API_KEY });
-    const replicate = new Replicate({ auth: context.env.REPLICATE_API_TOKEN });
-    const supabase = createClient(context.env.SUPABASE_URL, context.env.SUPABASE_ANON_KEY);
-
-    // Store user data in Supabase
-    const { full_name, email } = answers;
-    await storeUserData(supabase, full_name, email);
-
-    // Generate story prompt
-    let prompt = "Create a deeply inspiring and emotionally moving account of a day in my future life where I have achieved all my goals and dreams. The story MUST be split into EXACTLY 5 distinct chapters. Each chapter should focus on a different part of the day or aspect of my achieved dream life, highlighting the journey, struggles overcome, and the profound impact of realizing these dreams. It is CRUCIAL that you provide substantial content for ALL 5 chapters. Each chapter should be roughly equal in length and have a unique, descriptive title that represents the content of that chapter. Format each chapter as 'Title: [Your Title Here]' followed by the chapter content. Do not use generic titles like 'Chapter 1' or 'Morning'. The story should be in first person, without using any names.\n\n";
-
-    if (inputType === 'questions') {
-      prompt += `In this future, I look like an adult ${answers.appearance || 'Not specified'}. `;
-      prompt += `My career is: ${answers.career || 'Not specified'}. `;
-      prompt += `I work in: ${answers.work_environment || 'Not specified'}. `;
-      prompt += `My home is: ${answers.home || 'Not specified'}. `;
-      prompt += `My morning routine involves: ${answers.morning_routine || 'Not specified'}. `;
-      prompt += `My hobbies include: ${answers.hobbies || 'Not specified'}. `;
-      prompt += `My relationships are: ${answers.relationships || 'Not specified'}. `;
-      prompt += `I travel: ${answers.travel || 'Not specified'}. `;
-      prompt += `My personal growth involves: ${answers.personal_growth || 'Not specified'}. `;
-      prompt += `I make a positive impact by: ${answers.impact || 'Not specified'}. `;
-      prompt += `My evening routine includes: ${answers.evening_routine || 'Not specified'}. `;
-    } else {
-      prompt += `In this future, I look like an adult ${answers.freeform_appearance || 'Not specified'}. `;
-      prompt += `I have achieved these goals: ${answers.freeform_goals || 'Not specified'}. `;
-    }
-
-    // Generate story with OpenAI
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: "You are a deeply empathetic life coach and inspirational writer. Your task is to create emotionally moving and motivational future scenarios based on people's goals and dreams."
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      max_tokens: 2000,
-      n: 1,
-      temperature: 0.7,
+  // Handle CORS preflight requests
+  if (context.request.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders
     });
+  }
 
-    const generatedContent = completion.choices[0].message.content.trim();
+  // Add CORS headers to the actual response
+  if (context.request.method === "POST") {
+    try {
+      const { inputType, answers } = await context.request.json();
 
-    // Extract chapters
-    const chapters = [];
-    const chapterRegex = /Title: (.*?)\n([\s\S]*?)(?=Title:|###|$)/g;
-    let match;
-    while ((match = chapterRegex.exec(generatedContent)) !== null) {
-      chapters.push({
-        title: match[1].trim().replace(/\*\*/g, ''),
-        content: match[2].trim().replace(/\*\*/g, '')
+      // Initialize API clients
+      const openai = new OpenAI({ apiKey: context.env.OPENAI_API_KEY });
+      const replicate = new Replicate({ auth: context.env.REPLICATE_API_TOKEN });
+      const supabase = createClient(context.env.SUPABASE_URL, context.env.SUPABASE_ANON_KEY);
+
+      // Store user data in Supabase
+      const { full_name, email } = answers;
+      await storeUserData(supabase, full_name, email);
+
+      // Generate story prompt
+      let prompt = "Create a deeply inspiring and emotionally moving account of a day in my future life where I have achieved all my goals and dreams. The story MUST be split into EXACTLY 5 distinct chapters. Each chapter should focus on a different part of the day or aspect of my achieved dream life, highlighting the journey, struggles overcome, and the profound impact of realizing these dreams. It is CRUCIAL that you provide substantial content for ALL 5 chapters. Each chapter should be roughly equal in length and have a unique, descriptive title that represents the content of that chapter. Format each chapter as 'Title: [Your Title Here]' followed by the chapter content. Do not use generic titles like 'Chapter 1' or 'Morning'. The story should be in first person, without using any names.\n\n";
+
+      if (inputType === 'questions') {
+        prompt += `In this future, I look like an adult ${answers.appearance || 'Not specified'}. `;
+        prompt += `My career is: ${answers.career || 'Not specified'}. `;
+        prompt += `I work in: ${answers.work_environment || 'Not specified'}. `;
+        prompt += `My home is: ${answers.home || 'Not specified'}. `;
+        prompt += `My morning routine involves: ${answers.morning_routine || 'Not specified'}. `;
+        prompt += `My hobbies include: ${answers.hobbies || 'Not specified'}. `;
+        prompt += `My relationships are: ${answers.relationships || 'Not specified'}. `;
+        prompt += `I travel: ${answers.travel || 'Not specified'}. `;
+        prompt += `My personal growth involves: ${answers.personal_growth || 'Not specified'}. `;
+        prompt += `I make a positive impact by: ${answers.impact || 'Not specified'}. `;
+        prompt += `My evening routine includes: ${answers.evening_routine || 'Not specified'}. `;
+      } else {
+        prompt += `In this future, I look like an adult ${answers.freeform_appearance || 'Not specified'}. `;
+        prompt += `I have achieved these goals: ${answers.freeform_goals || 'Not specified'}. `;
+      }
+
+      // Generate story with OpenAI
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content: "You are a deeply empathetic life coach and inspirational writer. Your task is to create emotionally moving and motivational future scenarios based on people's goals and dreams."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        max_tokens: 2000,
+        n: 1,
+        temperature: 0.7,
+      });
+
+      const generatedContent = completion.choices[0].message.content.trim();
+
+      // Extract chapters
+      const chapters = [];
+      const chapterRegex = /Title: (.*?)\n([\s\S]*?)(?=Title:|###|$)/g;
+      let match;
+      while ((match = chapterRegex.exec(generatedContent)) !== null) {
+        chapters.push({
+          title: match[1].trim().replace(/\*\*/g, ''),
+          content: match[2].trim().replace(/\*\*/g, '')
+        });
+      }
+
+      // Extract the user's appearance for image generation
+      const userAppearance = inputType === 'questions' 
+        ? answers.appearance || 'Not specified'
+        : answers.freeform_appearance || 'Not specified';
+
+      // Generate image prompts
+      const imagePrompts = await generateImagePrompts(openai, chapters, userAppearance);
+
+      // Generate images
+      const images = await Promise.all(imagePrompts.map(prompt => generateImage(replicate, prompt)));
+
+      return new Response(JSON.stringify({ story: chapters, images }), {
+        status: 200,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json"
+        },
+      });
+
+    } catch (error) {
+      return new Response(JSON.stringify({ error: 'An unexpected error occurred' }), {
+        status: 500,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json"
+        },
       });
     }
-
-    // Extract the user's appearance for image generation
-    const userAppearance = inputType === 'questions' 
-      ? answers.appearance || 'Not specified'
-      : answers.freeform_appearance || 'Not specified';
-
-    // Generate image prompts
-    const imagePrompts = await generateImagePrompts(openai, chapters, userAppearance);
-
-    // Generate images
-    const images = await Promise.all(imagePrompts.map(prompt => generateImage(replicate, prompt)));
-
-    return new Response(JSON.stringify({ story: chapters, images }), {
-      status: 200,
-      headers: { ...headers, 'Content-Type': 'application/json' },
-    });
-
-  } catch (error) {
-    console.error('Error generating story:', error);
-    return new Response(JSON.stringify({ 
-      error: 'An unexpected error occurred', 
-      details: error.message
-    }), {
-      status: 500,
-      headers: { ...headers, 'Content-Type': 'application/json' },
-    });
   }
+
+  return new Response("Method not allowed", {
+    status: 405,
+    headers: corsHeaders
+  });
 }
 
 async function generateImagePrompts(openai, chapters, userAppearance) {
@@ -217,4 +224,3 @@ async function storeUserData(supabase, name, email) {
     throw error;
   }
 }
-

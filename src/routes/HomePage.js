@@ -3,8 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import '../styles/HomePage.css';
 
 const HomePage = () => {
-  const navigate = useNavigate();
-
 
   return (
     <div className="home-page">

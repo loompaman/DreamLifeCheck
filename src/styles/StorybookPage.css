@@ -19,6 +19,9 @@ body, html {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  -webkit-overflow-scrolling: touch;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .fancy-frame-container {

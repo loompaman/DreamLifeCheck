@@ -65,37 +65,42 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  padding-top: 60px; /* Reduced padding-top to move content up */
 }
 
 .loading-content {
   text-align: center;
   padding: 2rem;
+  color: #00244c; /* Dark blue color for better visibility */
 }
 
 .loading-content h1 {
   font-size: 2rem;
-  color: #333;
   margin-bottom: 1rem;
 }
 
-.loading-content p {
+.loading-status {
   font-size: 1.2rem;
-  color: #666;
   margin-bottom: 2rem;
 }
 
 .loading-wheel {
   border: 5px solid #f3f3f3;
-  border-top: 5px solid #3498db;
+  border-top: 5px solid #eace94;
   border-radius: 50%;
   width: 50px;
   height: 50px;
   animation: spin 1s linear infinite;
-  margin: 0 auto;
+  margin: 0 auto 2rem;
 }
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.progress-text {
+  font-size: 1.2rem;
+  color: #eace94;
+  margin-top: 1rem;
+  font-weight: bold;
 }

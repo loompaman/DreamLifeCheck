@@ -6,16 +6,16 @@ const LoadingPage = ({ status }) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const timer30s = setTimeout(() => setProgress(25), 30000);
-    const timer1m = setTimeout(() => setProgress(50), 60000);
-    const timer1m30s = setTimeout(() => setProgress(75), 90000);
-    const timer2m = setTimeout(() => setProgress(100), 120000);
+    const timer20s = setTimeout(() => setProgress(25), 20000);
+    const timer40s = setTimeout(() => setProgress(50), 40000);
+    const timer1m = setTimeout(() => setProgress(75), 60000);
+    const timer1m20s = setTimeout(() => setProgress(100), 80000);
 
     return () => {
-      clearTimeout(timer30s);
+      clearTimeout(timer20s);
+      clearTimeout(timer40s);
       clearTimeout(timer1m);
-      clearTimeout(timer1m30s);
-      clearTimeout(timer2m);
+      clearTimeout(timer1m20s);
     };
   }, []);
 

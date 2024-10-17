@@ -11,200 +11,166 @@ body, html {
 
 .storybook-page {
   min-height: 100vh;
-  padding: 60px 10px 20px; /* Top padding for header, side padding, and bottom padding */
+  background-color: rgb(174, 228, 255);
   display: flex;
-  flex-direction: column;
-  background-image: url('../assets/images/clouds.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  -webkit-overflow-scrolling: touch;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-}
-
-.fancy-frame-container {
-  width: 90vw;  /* 90% of the viewport width */
-  height: 80vh; /* 80% of the viewport height */
-  max-width: 1000px; /* Maximum width */
-  max-height: 700px; /* Maximum height */
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
 }
 
 .storybook-content {
-  text-align: center;
-  color: black;
+  background-color: white;
+  border-radius: 8px;
+  padding: 30px;
   width: 100%;
-  padding: 2vmin;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 4px solid #DAA520; /* Darker gold color (Goldenrod) */
 }
 
 .storybook-content h1 {
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
-  margin: 0 0 3vh 0;
-  font-weight: bold;
+  font-size: 2rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .storybook-description {
-  font-size: clamp(0.8rem, 2vw, 1rem);
-  margin-bottom: 3vh;
+  font-size: 1rem;
+  color: #666;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.input-type-selector {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.input-type-button {
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.input-type-button.active {
+  background-color: #4CAF50;
+  color: white;
 }
 
 .story-form {
-  text-align: left;
-  width: 100%;
-  margin-top: 3vh;
-}
-
-.story-form h2 {
-  font-size: clamp(1rem, 2.5vw, 1.2rem);
-  margin-bottom: 2vh;
   display: flex;
-  align-items: center;
-  margin-top: 20px;
-  margin-bottom: 15px;
-  color: #4CAF50;
-  font-size: 1.2em;
+  flex-direction: column;
 }
 
 .form-group {
-  margin-bottom: 3vh;
+  margin-bottom: 20px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 1vh;
-  font-size: clamp(0.8rem, 2vw, 1rem);
-}
-
-.form-group select {
-  width: 100%;
-  padding: 1vh 1vw;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: clamp(0.8rem, 2vw, 1rem);
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 5px;
 }
 
 .form-group input[type="text"],
 .form-group input[type="email"] {
   width: 100%;
-  padding: 10px;
-  font-size: 16px;
+  padding: 12px;
+  font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
+  height: 40px; /* Explicitly set height for consistency */
+  box-sizing: border-box; /* Ensures padding doesn't affect overall size */
 }
 
 .form-group textarea {
   width: 100%;
   padding: 10px;
+  font-size: 1rem;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
+  border-radius: 4px;
+}
+
+.form-group textarea {
+  min-height: 100px;
   resize: vertical;
 }
 
-/* Smaller placeholder text */
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-  font-size: 11px; /* Adjust this value to make the placeholder text smaller */
-  color: #999; /* Light gray color for placeholder text */
+.form-group input[type="email"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 1.1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 20px;
 }
 
-/* Ensure consistent placeholder text size across browsers */
-.form-group input::-webkit-input-placeholder,
-.form-group textarea::-webkit-input-placeholder {
-  font-size: 14px;
+/* If you want to specifically target the email field, you can use its id */
+#email {
+  height: 50px; /* Increased height */
 }
 
-.form-group input::-moz-placeholder,
-.form-group textarea::-moz-placeholder {
-  font-size: 14px;
+.submit-button {
+  background-color: #4CAF50;
+  color: white;
+  font-size: 1.1rem;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  align-self: center;
+  margin-top: 20px;
 }
 
-.form-group input:-ms-input-placeholder,
-.form-group textarea:-ms-input-placeholder {
-  font-size: 14px;
+.submit-button:hover {
+  background-color: #45a049;
 }
 
-.form-group input:-moz-placeholder,
-.form-group textarea:-moz-placeholder {
-  font-size: 14px;
-}
-
-/* Adjust font size for mobile devices */
 @media (max-width: 768px) {
-  .storybook-page {
-    padding: 2vw;
-    align-items: flex-start;
-    padding-top: 3vh;
-  }
-
   .storybook-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 75vh;
-    padding: 2vmin;
+    padding: 20px;
   }
 
   .storybook-content h1 {
-    margin-bottom: 2vh;
+    font-size: 1.8rem;
   }
 
   .storybook-description {
-    margin-bottom: 2vh;
+    font-size: 0.9rem;
   }
 
-  .story-form {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    margin-top: 2vh;
-  }
-
-  .form-group {
-    margin-bottom: 2vh;
-  }
-
-  .form-group input[type="text"],
-  .form-group input[type="email"],
-  .form-group textarea {
-    font-size: 14px;
-  }
-
-  .form-group input::placeholder,
-  .form-group textarea::placeholder,
-  .form-group input::-webkit-input-placeholder,
-  .form-group textarea::-webkit-input-placeholder,
-  .form-group input::-moz-placeholder,
-  .form-group textarea::-moz-placeholder,
-  .form-group input:-ms-input-placeholder,
-  .form-group textarea:-ms-input-placeholder,
-  .form-group input:-moz-placeholder,
-  .form-group textarea:-moz-placeholder {
-    font-size: 10px; /* Even smaller for mobile devices */
+  .input-type-button {
+    font-size: 0.9rem;
+    padding: 8px 16px;
   }
 }
 
 .page-background {
+  min-height: 100vh;
+  background-color: rgb(174, 228, 255);
   background-image: url('../assets/images/clouds.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  min-height: 100vh;
-  padding: 40px 10px; /* Increased top padding */
+  background-attachment: fixed;
   display: flex;
-  flex-direction: column;
   justify-content: center;
+  align-items: flex-start;
+  padding: 60px 20px;
 }
 
 .content-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
   width: 100%;
-  max-width: 600px; /* Adjust based on your preference */
-  margin: 0 auto;
+  max-width: 600px;
 }
 
 .storybook-content {
@@ -321,7 +287,7 @@ body, html {
 
 @media (max-width: 768px) {
   .storybook-page {
-    padding-top: 50px; /* Adjust based on your header height */
+    padding-top: 50px;
   }
 
   .storybook-content {
@@ -333,7 +299,7 @@ body, html {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Hide overflow */
+  overflow: hidden;
 }
 
 .fancyFrameContainer {
@@ -344,24 +310,22 @@ body, html {
 
 .fancyFrameContents {
   flex: 1;
-  overflow-y: auto; /* Allow scrolling within the frame */
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .dream-career-input {
-  min-height: 80px; /* Set a minimum height */
+  min-height: 80px;
   font-size: 16px;
   padding: 10px 15px;
-  resize: vertical; /* Allow vertical resizing */
+  resize: vertical;
 }
 
-/* If you want to make it wider as well, you can add: */
 .dream-career-input {
-  width: 100%; /* Make it full width of its container */
-  max-width: 500px; /* Set a maximum width if desired */
+  width: 100%;
+  max-width: 500px;
 }
 
-/* For mobile devices, you might want to adjust the size: */
 @media (max-width: 768px) {
   .dream-career-input {
     height: 40px;

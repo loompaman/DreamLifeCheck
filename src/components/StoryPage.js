@@ -156,7 +156,7 @@ const StoryPage = ({ chapters, userName }) => {
                   <p>Thank you for reading!</p>
 
                   <button className="final-page-button" onClick={openStripeLink}>
-                    📖 I want a super detailed Storybook about my dream life with better images
+                    📖 I'm interested in a detailed Storybook with better images
                     </button>
                 </div>
               )}
@@ -177,6 +177,19 @@ const StoryPage = ({ chapters, userName }) => {
                 </>
               ) : (
                 <div className="empty-page final-page">
+                  <h4 className="get-access-text">Get first access to these features:</h4>
+                  <div className="tally-form-container">
+                    <iframe 
+                      data-tally-src="https://tally.so/embed/3qKeQd?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" 
+                      loading="lazy" 
+                      width="100%" 
+                      height="300" 
+                      frameBorder="0" 
+                      marginHeight="0" 
+                      marginWidth="0" 
+                      title="DreamLifeCheck"
+                    ></iframe>
+                  </div>
                   <h3 className="future-features">More features coming soon:</h3>
                   <div className="final-page-buttons">
                     <button className="final-page-button" onClick={() => handleButtonClick('steps')}>
@@ -194,19 +207,6 @@ const StoryPage = ({ chapters, userName }) => {
                     <button className="final-page-button" onClick={() => handleButtonClick('video')}>
                       🎥 Create My Dream Life Video
                     </button>
-                  </div>
-                  <h4 className="get-access-text">Get first access to these features:</h4>
-                  <div className="tally-form-container">
-                    <iframe 
-                      data-tally-src="https://tally.so/embed/3qKeQd?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" 
-                      loading="lazy" 
-                      width="100%" 
-                      height="300" 
-                      frameBorder="0" 
-                      marginHeight="0" 
-                      marginWidth="0" 
-                      title="DreamLifeCheck"
-                    ></iframe>
                   </div>
                 </div>
               )}

@@ -63,7 +63,7 @@ const StoryPage = ({ chapters, userName }) => {
   const currentChapter = chapters[currentPage] || { title: '', content: '' };
 
   const openStripeLink = () => {
-    window.open('https://buy.stripe.com/6oE3eQ3VrfJPeOscMS', '_blank', 'noopener,noreferrer');
+    window.open('https://buy.stripe.com/cN25mY2Rn7dj6hW6ov', '_blank', 'noopener,noreferrer');
   };
 
   const popupContents = {

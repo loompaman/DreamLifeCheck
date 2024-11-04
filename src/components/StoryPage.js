@@ -66,6 +66,14 @@ const StoryPage = ({ chapters, userName }) => {
     window.open('https://buy.stripe.com/cN25mY2Rn7dj6hW6ov', '_blank', 'noopener,noreferrer');
   };
 
+  const openFutureSelfLink = () => {
+    window.open('https://buy.stripe.com/28odTu4Zvapv9u8cMV', '_blank', 'noopener,noreferrer');
+  };
+
+  const openActionableStepsLink = () => {
+    window.open('https://buy.stripe.com/dR6aHieA5btzgWA6ow', '_blank', 'noopener,noreferrer');
+  };
+
   const popupContents = {
     steps: (
       <>
@@ -76,7 +84,23 @@ const StoryPage = ({ chapters, userName }) => {
           <li>Finance: Save 15% of your monthly income for the next 6 months towards your dream home down payment.</li>
           <li>Health: Exercise for 30 minutes, 5 days a week for 2 months, tracking progress with a fitness app.</li>
         </ul>
-        <p><strong>We'll provide tailored actionable steps for you based on your goals. If you are interested, please fill in the form at the bottom of the page.</strong> </p>
+        <button 
+          onClick={openActionableStepsLink} 
+          style={{
+            padding: '12px 24px',
+            fontSize: '16px',
+            background: 'linear-gradient(145deg, #51b354, #45a049)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            marginTop: '20px',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 2px 10px rgba(76, 175, 80, 0.2)'
+          }}
+        >
+          Get Personalized Steps →
+        </button>
       </>
     ),
     affirmations: (
@@ -129,7 +153,23 @@ const StoryPage = ({ chapters, userName }) => {
           <li>Challenges overcome and lessons learned</li>
           <li>Values and priorities that guided your success</li>
         </ul>
-        <p><strong>Coming soon!</strong> Fill out the form below to be notified when this feature launches.</p>
+        <button 
+          onClick={openFutureSelfLink} 
+          style={{
+            padding: '12px 24px',
+            fontSize: '16px',
+            background: 'linear-gradient(145deg, #51b354, #45a049)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            marginTop: '20px',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 2px 10px rgba(76, 175, 80, 0.2)'
+          }}
+        >
+          Get a Letter from your Future Self →
+        </button>
       </>
     ),
   };
@@ -152,11 +192,11 @@ const StoryPage = ({ chapters, userName }) => {
                 )
               ) : (
                 <div className="empty-page">
-                  <p>Now that you've seen what your dream life looks like, it's time to make it a reality.</p>
+                  <p>Now that you've seen what your dream life looks like, it's time to make it real.</p>
                   <p>Thank you for reading!</p>
-
+                  <br></br>
                   <button className="final-page-button" onClick={openStripeLink}>
-                    📖 I'm interested in a detailed Storybook with better images
+                    📖 I want a better Storybook
                     </button>
                 </div>
               )}
@@ -177,7 +217,38 @@ const StoryPage = ({ chapters, userName }) => {
                 </>
               ) : (
                 <div className="empty-page final-page">
-                  <h4 className="get-access-text">Get first access to these features:</h4>
+                  <h3 className="future-features">Other features:</h3>
+                  <div className="final-page-buttons">
+                    <button className="final-page-button" onClick={() => handleButtonClick('steps')}>
+                      <div>
+                        🎯 Actionable Steps
+                        <div style={{ 
+                          fontSize: '0.85em', 
+                          fontWeight: 'normal',
+                          fontStyle: 'italic',
+                          marginTop: '5px',
+                          color: 'rgba(255, 255, 255, 0.9)'
+                        }}>
+                          Get specific actionable steps based on your goals.
+                        </div>
+                      </div>
+                    </button>
+                    <button className="final-page-button" onClick={() => handleButtonClick('talkToFutureSelf')}>
+                      <div>
+                        ✉️ Letter from Future Self
+                        <div style={{ 
+                          fontSize: '0.85em', 
+                          fontWeight: 'normal',
+                          fontStyle: 'italic',
+                          marginTop: '5px',
+                          color: 'rgba(255, 255, 255, 0.9)'
+                        }}>
+                          Receive a personalized letter from your future self who has achieved all your dreams.
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+                  <h4 className="get-access-text">More features coming soon...</h4>
                   <div className="tally-form-container">
                     <iframe 
                       data-tally-src="https://tally.so/embed/3qKeQd?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" 
@@ -189,24 +260,6 @@ const StoryPage = ({ chapters, userName }) => {
                       marginWidth="0" 
                       title="DreamLifeCheck"
                     ></iframe>
-                  </div>
-                  <h3 className="future-features">More features coming soon:</h3>
-                  <div className="final-page-buttons">
-                    <button className="final-page-button" onClick={() => handleButtonClick('steps')}>
-                      🎯 Actionable Steps
-                    </button>
-                    <button className="final-page-button" onClick={() => handleButtonClick('affirmations')}>
-                      🌟 Daily Affirmations
-                    </button>
-                    <button className="final-page-button" onClick={() => handleButtonClick('talkToFutureSelf')}>
-                      ✉️ Letter from Future Self
-                    </button>
-                    <button className="final-page-button" onClick={() => handleButtonClick('reminders')}>
-                      ⏰ Daily Goal Reminders
-                    </button>
-                    <button className="final-page-button" onClick={() => handleButtonClick('video')}>
-                      🎥 Create My Dream Life Video
-                    </button>
                   </div>
                 </div>
               )}

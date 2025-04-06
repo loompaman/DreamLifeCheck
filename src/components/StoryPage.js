@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import html2pdf from 'html2pdf.js';
 import '../styles/StoryPage.css';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const StoryPage = ({ chapters, userName }) => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -174,9 +177,208 @@ const StoryPage = ({ chapters, userName }) => {
     ),
   };
 
+  const downloadPDF = async () => {
+    try {
+      // Configure PDF options
+      const opt = {
+        margin: 0,
+        filename: `${userName}'s_Dream_Life_Story.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          windowWidth: 1200,
+          windowHeight: 800
+        },
+        jsPDF: { 
+          unit: 'mm', 
+          format: 'a4', 
+          orientation: 'landscape'
+        }
+      };
+
+      // Create a new PDF document
+      const pdf = new jsPDF(opt.jsPDF);
+      
+      // Function to add a page to the PDF
+      const addPageToPDF = async (element) => {
+        const canvas = await html2canvas(element, opt.html2canvas);
+        const imgData = canvas.toDataURL('image/jpeg', opt.image.quality);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+      };
+
+      // Create a temporary container for pages
+      const container = document.createElement('div');
+      container.style.position = 'absolute';
+      container.style.left = '-9999px';
+      container.style.top = '-9999px';
+      document.body.appendChild(container);
+
+      try {
+        // Add title page
+        const titlePage = document.createElement('div');
+        titlePage.style.width = '1200px';
+        titlePage.style.height = '800px';
+        titlePage.style.background = 'white';
+        titlePage.style.display = 'flex';
+        titlePage.style.justifyContent = 'center';
+        titlePage.style.alignItems = 'center';
+        
+        const titleContent = document.createElement('h1');
+        titleContent.style.fontSize = '48px';
+        titleContent.style.color = '#00244c';
+        titleContent.style.textAlign = 'center';
+        titleContent.textContent = `${userName}'s Dream Life Story`;
+        
+        titlePage.appendChild(titleContent);
+        container.appendChild(titlePage);
+        await addPageToPDF(titlePage);
+        container.innerHTML = '';
+
+        // Add each chapter page
+        for (let i = 0; i < chapters.length; i++) {
+          const chapter = chapters[i];
+          
+          // Create a story book page
+          const storyBook = document.createElement('div');
+          storyBook.className = 'story-book';
+          storyBook.style.width = '1200px';
+          storyBook.style.height = '800px';
+          storyBook.style.background = '#00244c';
+          storyBook.style.padding = '12px';
+          storyBook.style.borderRadius = '15px';
+          storyBook.style.display = 'flex';
+
+          const pagesContainer = document.createElement('div');
+          pagesContainer.className = 'pages-container';
+          pagesContainer.style.display = 'flex';
+          pagesContainer.style.flex = '1';
+          pagesContainer.style.gap = '20px';
+
+          // Image page
+          const imagePage = document.createElement('div');
+          imagePage.className = 'page image-page';
+          imagePage.style.flex = '1';
+          imagePage.style.background = 'white';
+          imagePage.style.borderRadius = '5px';
+          imagePage.style.display = 'flex';
+          imagePage.style.justifyContent = 'center';
+          imagePage.style.alignItems = 'center';
+          imagePage.style.padding = '15px';
+
+          const img = document.createElement('img');
+          img.src = chapter.imageUrl;
+          img.style.maxWidth = '100%';
+          img.style.maxHeight = '100%';
+          img.style.objectFit = 'contain';
+          imagePage.appendChild(img);
+
+          // Text page
+          const textPage = document.createElement('div');
+          textPage.className = 'page text-page';
+          textPage.style.flex = '1';
+          textPage.style.background = 'white';
+          textPage.style.borderRadius = '5px';
+          textPage.style.padding = '15px';
+
+          const chapterTitle = document.createElement('h2');
+          chapterTitle.className = 'chapter-title';
+          chapterTitle.style.textAlign = 'center';
+          chapterTitle.style.color = '#00244c';
+          chapterTitle.style.fontSize = '22px';
+          chapterTitle.style.marginBottom = '15px';
+          chapterTitle.textContent = `Chapter ${i + 1}: ${chapter.title}`;
+          textPage.appendChild(chapterTitle);
+
+          const content = document.createElement('div');
+          content.className = 'chapter-content';
+          chapter.content.split('\n').forEach(paragraph => {
+            if (paragraph.trim()) {
+              const p = document.createElement('p');
+              p.style.fontSize = '16px';
+              p.style.color = '#5a3e2b';
+              p.style.lineHeight = '1.5';
+              p.style.marginBottom = '15px';
+              p.textContent = paragraph.trim();
+              content.appendChild(p);
+            }
+          });
+          textPage.appendChild(content);
+
+          pagesContainer.appendChild(imagePage);
+          pagesContainer.appendChild(textPage);
+          storyBook.appendChild(pagesContainer);
+          container.appendChild(storyBook);
+
+          await addPageToPDF(storyBook);
+          if (i < chapters.length - 1) {
+            pdf.addPage();
+          }
+          container.innerHTML = '';
+        }
+
+        // Add final page
+        const finalStoryBook = document.createElement('div');
+        finalStoryBook.className = 'story-book';
+        finalStoryBook.style.width = '1200px';
+        finalStoryBook.style.height = '800px';
+        finalStoryBook.style.background = '#00244c';
+        finalStoryBook.style.padding = '12px';
+        finalStoryBook.style.borderRadius = '15px';
+        finalStoryBook.style.display = 'flex';
+
+        const finalContent = document.createElement('div');
+        finalContent.style.flex = '1';
+        finalContent.style.background = 'white';
+        finalContent.style.borderRadius = '5px';
+        finalContent.style.padding = '40px';
+        finalContent.style.display = 'flex';
+        finalContent.style.flexDirection = 'column';
+        finalContent.style.alignItems = 'center';
+        finalContent.style.justifyContent = 'center';
+        finalContent.style.textAlign = 'center';
+
+        const finalMessage = document.createElement('p');
+        finalMessage.style.fontSize = '20px';
+        finalMessage.style.color = '#4CAF50';
+        finalMessage.style.marginBottom = '20px';
+        finalMessage.textContent = "Now that you've seen what your dream life looks like, it's time to make it real.";
+
+        const thankYou = document.createElement('p');
+        thankYou.style.fontSize = '18px';
+        thankYou.style.color = '#333';
+        thankYou.textContent = "Thank you for reading!";
+
+        finalContent.appendChild(finalMessage);
+        finalContent.appendChild(thankYou);
+        finalStoryBook.appendChild(finalContent);
+        
+        container.appendChild(finalStoryBook);
+        pdf.addPage();
+        await addPageToPDF(finalStoryBook);
+
+        // Save the PDF
+        pdf.save(`${userName}'s_Dream_Life_Story.pdf`);
+      } finally {
+        // Clean up
+        document.body.removeChild(container);
+      }
+
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('There was an error generating your PDF. Please try again.');
+    }
+  };
+
   return (
     <div className="story-container">
       <h1 className="story-title">{userName}'s Dream Life Story</h1>
+      <button onClick={downloadPDF} className="download-pdf-button">
+        Download as PDF 📄
+      </button>
       <div className="story-book">
         <div className="pages-container">
           <div className="page image-page">

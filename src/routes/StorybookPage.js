@@ -5,7 +5,7 @@ import StoryPage from '../components/StoryPage';
 
 // Add API URL based on environment
 const API_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://dreamlifecheck-api.pages.dev/api/generate-story'
+  ? 'https://dreamlifecheck.com/api/generate-story'
   : 'http://localhost:3001/api/generate-story';
 
 const StorybookPage = () => {
@@ -398,7 +398,7 @@ const StorybookPage = () => {
                   <div className="product-icon">✨</div>
                   <h3>Dream Life Story</h3>
                   <p className="product-description">
-                    Get your personalized dream life story with AI-generated images
+                    Get your personalized dream life story
                   </p>
                   <div className="price">$5.00 USD</div>
                 </div>

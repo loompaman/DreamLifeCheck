@@ -24,7 +24,14 @@ const LoadingPage = ({ status }) => {
       <FancyFrame>
         <div className="loading-content">
           <h1>Creating Your Dream Life Story</h1>
-          <p className="loading-status">{status}</p>
+          <p className="loading-status">
+            {status.split('\n').map((line, index) => (
+              <React.Fragment key={index}>
+                {line}
+                {index < status.split('\n').length - 1 && <br />}
+              </React.Fragment>
+            ))}
+          </p>
           <div className="loading-wheel"></div>
           <p className="progress-text">{progress}% Complete</p>
         </div>

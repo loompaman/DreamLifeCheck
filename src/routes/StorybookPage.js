@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/StorybookPage.css';
 import LoadingPage from '../components/LoadingPage';
 import StoryPage from '../components/StoryPage';
+
+// Add API URL based on environment
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://dreamlifecheck-api.pages.dev/api/generate-story'
+  : 'http://localhost:3001/api/generate-story';
 
 const StorybookPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -9,6 +14,7 @@ const StorybookPage = () => {
   const [storyChapters, setStoryChapters] = useState([]);
   const [loadingStatus, setLoadingStatus] = useState('');
   const [inputType, setInputType] = useState('questions');
+  const [showPayment, setShowPayment] = useState(false);
   const [formData, setFormData] = useState({
     appearance: '',
     career: '',
@@ -27,12 +33,102 @@ const StorybookPage = () => {
     email: ''
   });
 
+  useEffect(() => {
+    if (!showPayment) {
+      return;
+    }
+  }, [showPayment]);
+
+  // Check if returning from successful payment
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentStatus = urlParams.get('payment_status');
+    
+    if (paymentStatus === 'paid') {
+      // Retrieve stored form data
+      const storedData = localStorage.getItem('dreamlife_form_data');
+      if (storedData) {
+        try {
+          const parsedData = JSON.parse(storedData);
+          // Set the form data from storage
+          setFormData(prevState => ({
+            ...prevState,
+            ...parsedData.answers
+          }));
+          setInputType(parsedData.inputType);
+          // Start story generation with the complete form data
+          generateStory({
+            ...parsedData.answers,
+            inputType: parsedData.inputType
+          });
+          // Clear stored data
+          localStorage.removeItem('dreamlife_form_data');
+          // Clear URL parameters
+          window.history.replaceState({}, '', '/storybook');
+        } catch (error) {
+          console.error('Error processing stored form data:', error);
+          alert('There was an error loading your form data. Please try filling out the form again.');
+        }
+      } else {
+        alert('Could not find your form data. Please try filling out the form again.');
+      }
+    }
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
       ...prevState,
       [name]: value
     }));
+  };
+
+  const generateStory = async (formDataToSend) => {
+    setIsLoading(true);
+    setLoadingStatus('Generating your dream life story...\nEstimated time: 1-2 minutes');
+
+    try {
+      // Structure the data properly for the API
+      const requestData = {
+        answers: formDataToSend,
+        inputType: formDataToSend.inputType
+      };
+      delete requestData.answers.inputType;  // Remove inputType from answers
+
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(requestData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const responseData = await response.json();
+
+      if (!responseData.story || !Array.isArray(responseData.story) || responseData.story.length === 0) {
+        throw new Error('Story generation failed: Received empty story array');
+      }
+
+      if (!responseData.images || !Array.isArray(responseData.images)) {
+        responseData.images = new Array(responseData.story.length).fill('https://example.com/placeholder-image.jpg');
+      }
+
+      setStoryChapters(responseData.story.map((chapter, index) => ({
+        ...chapter,
+        imageUrl: responseData.images[index] || 'https://example.com/placeholder-image.jpg'
+      })));
+      setStoryGenerated(true);
+    } catch (error) {
+      console.error('Error generating story:', error);
+      alert(`An error occurred while generating the story. Please try again.`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -50,44 +146,14 @@ const StorybookPage = () => {
       return;
     }
 
-    setIsLoading(true);
-    setLoadingStatus('Generating your dream life story...');
-
-    const dataToSend = { 
+    // Store form data in localStorage
+    localStorage.setItem('dreamlife_form_data', JSON.stringify({
       answers: fieldsToCheck.reduce((obj, key) => ({ ...obj, [key]: formData[key] }), {}),
-      inputType 
-    };
+      inputType
+    }));
 
-    try {
-      const response = await fetch('https://dreamlifecheck.pages.dev/api/generate-story', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataToSend),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const { story, images } = await response.json();
-
-      if (Array.isArray(story)) {
-        setStoryChapters(story.map((chapter, index) => ({
-          ...chapter,
-          imageUrl: images[index] || 'https://example.com/placeholder-image.jpg'
-        })));
-        setStoryGenerated(true);
-      } else {
-        throw new Error('Generated story is not an array');
-      }
-    } catch (error) {
-      console.error('Error generating story:', error);
-      alert(`An error occurred while generating the story: ${error.message}. Please try again.`);
-    } finally {
-      setIsLoading(false);
-    }
+    // Show payment modal which will redirect to Stripe
+    setShowPayment(true);
   };
 
   if (isLoading) {
@@ -317,6 +383,46 @@ const StorybookPage = () => {
               <button type="submit" className="submit-button">Create My Dream Life</button>
             </div>
           </form>
+          
+          {showPayment && (
+            <div className="payment-modal-overlay">
+              <div className="payment-modal">
+                <button 
+                  className="close-modal" 
+                  onClick={() => setShowPayment(false)}
+                >
+                  ×
+                </button>
+                <h2>Complete Your Purchase</h2>
+                <div className="product-details">
+                  <div className="product-icon">✨</div>
+                  <h3>Dream Life Story</h3>
+                  <p className="product-description">
+                    Get your personalized dream life story with AI-generated images
+                  </p>
+                  <div className="price">$5.00 USD</div>
+                </div>
+                <div className="payment-form">
+                  <a 
+                    href="https://buy.stripe.com/eVacPqeA52X349O4gq" 
+                    className="submit-button"
+                    style={{ textDecoration: 'none', display: 'block', textAlign: 'center' }}
+                  >
+                    Pay $5.00
+                  </a>
+                  <div className="stripe-footer">
+                    <div className="powered-by-stripe">
+                      Powered by <span className="stripe-text">stripe</span>
+                    </div>
+                    <div className="stripe-links">
+                      <a href="https://stripe.com/legal" target="_blank" rel="noopener noreferrer">Terms</a>
+                      <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer">Privacy</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

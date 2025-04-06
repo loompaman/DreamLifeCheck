@@ -23,9 +23,11 @@ const RETRY_DELAY = 5000; // 5 seconds
 
 // Use CORS (place this before other middleware)
 app.use(cors({
-  origin: 'https://www.dreamlifecheck.com', // Your frontend URL
-  methods: ['GET', 'POST'],
-  credentials: true, // This allows session cookies to be sent back and forth
+  origin: process.env.NODE_ENV === 'production' 
+    ? 'https://www.dreamlifecheck.com'
+    : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 

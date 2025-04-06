@@ -9,7 +9,7 @@ const HomePage = () => {
       <div className="content-wrapper">
         <div className="hero-section">
           <h1>See Your Dream Life, Today</h1>
-          <p>AI generated storybook about your dream life</p>
+          <p>Get your personal storybook about your dream life</p>
           <Link to="/storybook" className="create-dream-life-button">
             Create My Dream Life
           </Link>

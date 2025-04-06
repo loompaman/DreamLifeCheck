@@ -333,3 +333,150 @@ body, html {
     padding: 8px 12px;
   }
 }
+
+.payment-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.payment-modal {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.payment-modal h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+.close-modal:hover {
+  color: #000;
+}
+
+.product-details {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.product-icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.product-details h3 {
+  color: #333;
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+}
+
+.product-description {
+  color: #666;
+  margin: 0 0 15px 0;
+  font-size: 0.9rem;
+}
+
+.price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2d2d2d;
+}
+
+.payment-form {
+  width: 100%;
+}
+
+#card-element {
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background: #f8f9fa;
+  margin-bottom: 20px;
+}
+
+.payment-form .submit-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.payment-form .submit-button:hover {
+  background-color: #45a049;
+}
+
+.payment-form .submit-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.stripe-payment-link {
+  width: 100%;
+  height: 100%;
+  min-height: 700px;
+  border: none;
+}
+
+.stripe-footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #697386;
+}
+
+.powered-by-stripe {
+  margin-bottom: 8px;
+}
+
+.stripe-text {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+}
+
+.stripe-links {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.stripe-links a {
+  color: #697386;
+  text-decoration: none;
+}
+
+.stripe-links a:hover {
+  color: #32325d;
+  text-decoration: underline;
+}

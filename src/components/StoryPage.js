@@ -196,7 +196,7 @@ const StoryPage = ({ chapters, userName }) => {
                   <p>Thank you for reading!</p>
                   <br></br>
                   <button className="final-page-button" onClick={openStripeLink}>
-                    📖 I want a better Storybook
+                    📖 Create a more detailed Storybook
                     </button>
                 </div>
               )}

@@ -100,9 +100,10 @@ const StorybookPage = () => {
 
   return (
     <div className="page-background">
-      <div className="content-wrapper">
+      <div className="content-wrapper" style={{ position: 'relative' }}>
         <div className="storybook-content">
           <h1>Dream Life Storybook</h1>
+          
           <p className="storybook-description">
             Create your dream life story. Choose how you'd like to describe your goals:
           </p>

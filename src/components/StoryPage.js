@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import html2pdf from 'html2pdf.js';
 import '../styles/StoryPage.css';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const StoryPage = ({ chapters, userName }) => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -196,6 +197,18 @@ const StoryPage = ({ chapters, userName }) => {
         }
       };
 
+      // Create a new PDF document
+      const pdf = new jsPDF(opt.jsPDF);
+      
+      // Function to add a page to the PDF
+      const addPageToPDF = async (element) => {
+        const canvas = await html2canvas(element, opt.html2canvas);
+        const imgData = canvas.toDataURL('image/jpeg', opt.image.quality);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+      };
+
       // Create a temporary container for pages
       const container = document.createElement('div');
       container.style.position = 'absolute';
@@ -221,12 +234,8 @@ const StoryPage = ({ chapters, userName }) => {
         
         titlePage.appendChild(titleContent);
         container.appendChild(titlePage);
-
-        // Initialize html2pdf instance
-        const worker = html2pdf().set(opt);
-
-        // Add title page
-        await worker.from(titlePage).toPdf();
+        await addPageToPDF(titlePage);
+        container.innerHTML = '';
 
         // Add each chapter page
         for (let i = 0; i < chapters.length; i++) {
@@ -301,15 +310,13 @@ const StoryPage = ({ chapters, userName }) => {
           pagesContainer.appendChild(imagePage);
           pagesContainer.appendChild(textPage);
           storyBook.appendChild(pagesContainer);
-          container.innerHTML = '';
           container.appendChild(storyBook);
 
-          // Add page to PDF
+          await addPageToPDF(storyBook);
           if (i < chapters.length - 1) {
-            await worker.from(storyBook).toPdf();
-          } else {
-            await worker.from(storyBook).toPdf();
+            pdf.addPage();
           }
+          container.innerHTML = '';
         }
 
         // Add final page
@@ -348,12 +355,12 @@ const StoryPage = ({ chapters, userName }) => {
         finalContent.appendChild(thankYou);
         finalStoryBook.appendChild(finalContent);
         
-        container.innerHTML = '';
         container.appendChild(finalStoryBook);
-        await worker.from(finalStoryBook).toPdf();
+        pdf.addPage();
+        await addPageToPDF(finalStoryBook);
 
         // Save the PDF
-        await worker.save();
+        pdf.save(`${userName}'s_Dream_Life_Story.pdf`);
       } finally {
         // Clean up
         document.body.removeChild(container);

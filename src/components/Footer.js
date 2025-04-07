@@ -9,6 +9,7 @@ const Footer = () => {
           <p>© 2025 DreamLifeCheck. All rights reserved.</p>
         </div>
         <div className="footer-right custom-footer-right">
+        <p>Enquiries: studylyfe99@gmail.com</p>
           {/* <a href="/" className="footer-link custom-footer-link">Privacy Policy</a>
           <a href="/" className="footer-link custom-footer-link">Terms of Service</a> */}
         </div>

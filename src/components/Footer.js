@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className="footer custom-footer">
       <div className="footer-content custom-footer-content">
         <div className="footer-left custom-footer-left">
-          <p>© 2025 DreamLifeCheck. All rights reserved.</p>
+          <p>© 2025 Dream Life Check. All rights reserved.</p>
         </div>
         <div className="footer-right custom-footer-right">
         <p>Enquiries: studylyfe99@gmail.com</p>

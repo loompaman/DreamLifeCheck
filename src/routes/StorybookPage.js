@@ -14,7 +14,6 @@ const StorybookPage = () => {
   const [storyChapters, setStoryChapters] = useState([]);
   const [loadingStatus, setLoadingStatus] = useState('');
   const [inputType, setInputType] = useState('questions');
-  const [showPayment, setShowPayment] = useState(false);
   const [formData, setFormData] = useState({
     appearance: '',
     career: '',
@@ -32,12 +31,6 @@ const StorybookPage = () => {
     full_name: '',
     email: ''
   });
-
-  useEffect(() => {
-    if (!showPayment) {
-      return;
-    }
-  }, [showPayment]);
 
   // Check if returning from successful payment
   useEffect(() => {

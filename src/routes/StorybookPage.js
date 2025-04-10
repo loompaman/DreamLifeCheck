@@ -152,8 +152,8 @@ const StorybookPage = () => {
       inputType
     }));
 
-    // Show payment modal which will redirect to Stripe
-    setShowPayment(true);
+    // Redirect directly to Stripe payment URL
+    window.location.href = 'https://buy.stripe.com/eVacPqeA52X349O4gq';
   };
 
   if (isLoading) {
@@ -383,46 +383,6 @@ const StorybookPage = () => {
               <button type="submit" className="submit-button">Create My Dream Life</button>
             </div>
           </form>
-          
-          {showPayment && (
-            <div className="payment-modal-overlay">
-              <div className="payment-modal">
-                <button 
-                  className="close-modal" 
-                  onClick={() => setShowPayment(false)}
-                >
-                  ×
-                </button>
-                <h2>Complete Your Purchase</h2>
-                <div className="product-details">
-                  <div className="product-icon">✨</div>
-                  <h3>Dream Life Story</h3>
-                  <p className="product-description">
-                    Get your personalized dream life story
-                  </p>
-                  <div className="price">$5.00 USD</div>
-                </div>
-                <div className="payment-form">
-                  <a 
-                    href="https://buy.stripe.com/eVacPqeA52X349O4gq" 
-                    className="submit-button"
-                    style={{ textDecoration: 'none', display: 'block', textAlign: 'center' }}
-                  >
-                    Pay $5.00
-                  </a>
-                  <div className="stripe-footer">
-                    <div className="powered-by-stripe">
-                      Powered by <span className="stripe-text">stripe</span>
-                    </div>
-                    <div className="stripe-links">
-                      <a href="https://stripe.com/legal" target="_blank" rel="noopener noreferrer">Terms</a>
-                      <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer">Privacy</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>

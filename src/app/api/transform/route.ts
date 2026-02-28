@@ -109,8 +109,8 @@ export async function POST(req: NextRequest) {
     const imageBuffer = await imageFile.arrayBuffer();
     const imageBase64 = `data:${imageFile.type};base64,${Buffer.from(imageBuffer).toString("base64")}`;
 
-    // Generate for each scenario (up to 4 to avoid timeout)
-    const selectedScenarios = scenarios.slice(0, 4);
+    // Generate for each scenario (up to 8)
+    const selectedScenarios = scenarios.slice(0, 8);
 
     const results = await Promise.allSettled(
       selectedScenarios.map(async (scenarioId) => {
@@ -145,4 +145,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-

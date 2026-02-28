@@ -16,6 +16,14 @@ const SCENARIOS: Record<string, { label: string; emoji: string; desc: string; pr
   jet2:       { label: "Jet Boarding",  emoji: "🛫",  desc: "Stairs · Golden Hour",       price: 5 },
 };
 
+const PRICE_BY_COUNT: Record<number, number> = {
+  1: 5,
+  4: 15,
+  8: 30,
+};
+
+const priceForCount = (count: number) => PRICE_BY_COUNT[count] ?? 0;
+
 export default function CheckoutPage() {
   const router = useRouter();
   const [preview, setPreview] = useState<string | null>(null);
@@ -35,10 +43,11 @@ export default function CheckoutPage() {
     }
   }, [router]);
 
-  const total = selected.reduce((sum, id) => sum + (SCENARIOS[id]?.price ?? 0), 0);
+  const count = selected.length;
+  const total = priceForCount(count);
 
   const handlePay = async () => {
-    if (!preview || !selected.length) return;
+    if (!preview || !selected.length || total === 0) return;
     setLoading(true); setError(null);
     try {
       const res = await fetch("/api/stripe/checkout", {
@@ -124,7 +133,7 @@ export default function CheckoutPage() {
             </div>
             <div>
               <p className="text-white font-semibold text-sm">Your photo</p>
-              <p className="text-white/35 text-xs mt-0.5">{selected.length} scenario{selected.length !== 1 ? "s" : ""} selected</p>
+              <p className="text-white/35 text-xs mt-0.5">{count} scenario{count !== 1 ? "s" : ""} selected</p>
             </div>
             <Link href="/upload" className="ml-auto text-xs text-white/25 hover:text-white/50 transition-colors">Edit</Link>
           </div>
@@ -142,7 +151,7 @@ export default function CheckoutPage() {
                       <p className="text-white/30 text-xs">{s.desc}</p>
                     </div>
                   </div>
-                  <span className="text-white/60 text-sm font-medium">${s.price}</span>
+                  <span className="text-white/35 text-xs font-medium">Included</span>
                 </div>
               ) : null;
             })}
@@ -155,25 +164,25 @@ export default function CheckoutPage() {
             <span className="text-2xl font-bold" style={{
               background: "linear-gradient(135deg, #c9a84c, #f5e6b8)",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-            }}>${total}</span>
+            }}>{total ? `$${total}` : "--"}</span>
           </div>
         </div>
 
         {/* Error */}
-        {error && (
+        {(error || (selected.length > 0 && total === 0)) && (
           <div className="flex items-center gap-3 p-4 rounded-xl text-sm text-red-400 mb-4"
             style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)" }}>
             <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" />
             </svg>
-            {error}
+            {error ?? "Select exactly 1, 4, or 8 scenarios to continue."}
           </div>
         )}
 
         {/* Pay button */}
         <button
           onClick={handlePay}
-          disabled={loading}
+          disabled={loading || total === 0}
           className="w-full py-4 rounded-full text-base font-semibold text-black transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-[0.99]"
           style={{
             background: "linear-gradient(135deg, #b8923e, #e8c96a, #f5e6b8, #c9a84c)",

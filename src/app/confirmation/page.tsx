@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 
@@ -20,6 +20,7 @@ type Result = { scenario: string; imageUrl: string };
 
 export default function ConfirmationPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const hasFired = useRef(false);
 
   const [results, setResults] = useState<Result[]>([]);
@@ -36,13 +37,26 @@ export default function ConfirmationPage() {
       try {
         const photo = sessionStorage.getItem("uploadedPhoto");
         const scenariosRaw = sessionStorage.getItem("selectedScenarios");
+        const photoName = sessionStorage.getItem("uploadedPhotoName");
+        const sessionId = searchParams.get("session_id");
 
-        if (!photo || !scenariosRaw) {
+        if (!photo || !scenariosRaw || !sessionId) {
           router.replace("/upload");
           return;
         }
 
         const scenarios: string[] = JSON.parse(scenariosRaw);
+
+        // Confirm payment and upload photo to Supabase
+        const confirmRes = await fetch("/api/stripe/confirm", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId, photo, photoName }),
+        });
+        const confirmData = await confirmRes.json();
+        if (!confirmRes.ok) {
+          throw new Error(confirmData.error || "Payment confirmation failed");
+        }
 
         // Convert base64 data URL → File
         const fetchRes = await fetch(photo);
@@ -97,7 +111,7 @@ export default function ConfirmationPage() {
     };
 
     generate();
-  }, [router]);
+  }, [router, searchParams]);
 
   /* ── Loading ── */
   if (loading) {

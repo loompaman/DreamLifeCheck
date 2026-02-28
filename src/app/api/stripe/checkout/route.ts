@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const SCENARIO_PRICES: Record<string, { label: string; price: number }> = {
-  jet:        { label: "Private Jet photo",  price: 500 },  // in cents
-  ferrari:    { label: "Supercar photo",     price: 500 },
-  yacht:      { label: "Superyacht photo",   price: 500 },
-  monaco:     { label: "Monaco photo",       price: 500 },
-  club:       { label: "Night Club photo",   price: 500 },
-  racetrack:  { label: "Race Track photo",   price: 500 },
-  restaurant: { label: "Fine Dining photo",  price: 500 },
-  jet2:       { label: "Jet Boarding photo",  price: 500 },
+const PRICE_BY_COUNT: Record<number, number> = {
+  1: 500,
+  4: 1500,
+  8: 3000,
 };
 
 export async function POST(req: NextRequest) {
@@ -27,27 +22,35 @@ export async function POST(req: NextRequest) {
 
     const stripe = new Stripe(stripeKey);
 
-    // Store the photo in session metadata (base64 is too large for Stripe metadata,
-    // so we save it server-side in a simple KV or just log it for manual processing)
-    console.log("📸 Order photo received for manual processing:", {
+    // Receipt log only — actual upload happens after payment confirmation
+    console.log("📸 Checkout initiated:", {
       scenarios,
       photoLength: photo.length,
       timestamp: new Date().toISOString(),
     });
 
-    const lineItems = scenarios
-      .filter((id: string) => SCENARIO_PRICES[id])
-      .map((id: string) => ({
+    const count = scenarios.length;
+    const total = PRICE_BY_COUNT[count];
+    if (!total) {
+      return NextResponse.json(
+        { error: "Select exactly 1, 4, or 8 photos" },
+        { status: 400 }
+      );
+    }
+
+    const lineItems = [
+      {
         price_data: {
           currency: "usd",
           product_data: {
-            name: `DreamLifeCheck — ${SCENARIO_PRICES[id].label}`,
-            description: "AI luxury photo featuring you · Delivered within 24 hours",
+            name: `DreamLifeCheck — ${count} photo${count > 1 ? "s" : ""}`,
+            description: "AI luxury photo bundle · Delivered within 24 hours",
           },
-          unit_amount: SCENARIO_PRICES[id].price,
+          unit_amount: total,
         },
         quantity: 1,
-      }));
+      },
+    ];
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
@@ -59,6 +62,7 @@ export async function POST(req: NextRequest) {
       cancel_url: `${baseUrl}/checkout`,
       metadata: {
         scenarios: scenarios.join(","),
+        count: String(count),
       },
       custom_text: {
         submit: {
@@ -73,4 +77,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Failed to create checkout session" }, { status: 500 });
   }
 }
-

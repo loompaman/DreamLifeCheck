@@ -16,6 +16,14 @@ const SCENARIOS = [
   { id: "jet2",       label: "Jet Boarding", emoji: "🛫",  desc: "Stairs · Golden Hour",       accent: "#818cf8", price: 5, demo: "/demo-jet.png"       },
 ];
 
+const PRICE_BY_COUNT: Record<number, number> = {
+  1: 5,
+  4: 15,
+  8: 30,
+};
+
+const priceForCount = (count: number) => PRICE_BY_COUNT[count] ?? 0;
+
 export default function UploadPage() {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
@@ -50,7 +58,14 @@ export default function UploadPage() {
   }, [handleFile]);
 
   const toggle = (id: string) =>
-    setSelected((p) => p.includes(id) ? p.filter((s) => s !== id) : [...p, id]);
+    setSelected((p) => {
+      if (p.includes(id)) return p.filter((s) => s !== id);
+      if (p.length >= 8) {
+        setError("You can select up to 8 scenarios");
+        return p;
+      }
+      return [...p, id];
+    });
 
   const handleContinue = () => {
     if (!preview || !selected.length) return;
@@ -61,7 +76,9 @@ export default function UploadPage() {
     router.push("/checkout");
   };
 
-  const canContinue = !!preview && selected.length > 0;
+  const count = selected.length;
+  const total = priceForCount(count);
+  const canContinue = !!preview && total > 0;
 
   return (
     <main className="bg-[#03030a] min-h-screen">
@@ -193,7 +210,9 @@ export default function UploadPage() {
               <h2 className="text-lg font-semibold text-white tracking-tight">Choose Your Scenarios</h2>
               <span className="ml-auto text-xs text-white/25">{selected.length} selected</span>
             </div>
-            <p className="text-white/30 text-sm mb-6 pl-10">$5 per photo — tap a card to preview the example, click to select.</p>
+            <p className="text-white/30 text-sm mb-6 pl-10">
+              Choose 1, 4, or 8 photos — 1 = $5, 4 = $15, 8 = $30.
+            </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {SCENARIOS.map((s) => {
@@ -277,13 +296,13 @@ export default function UploadPage() {
               <div className="mt-5 flex items-center justify-between px-4 py-3 rounded-xl"
                 style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)" }}>
                 <span className="text-white/50 text-sm">
-                  {selected.length} photo{selected.length !== 1 ? "s" : ""}
+                  {count} photo{count !== 1 ? "s" : ""}
                 </span>
                 <span className="font-bold text-lg" style={{
                   background: "linear-gradient(135deg, #c9a84c, #f5e6b8)",
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
                 }}>
-                  ${selected.reduce((sum, id) => sum + (SCENARIOS.find(s => s.id === id)?.price ?? 0), 0)} total
+                  {total > 0 ? `$${total} total` : "Select 1, 4, or 8"}
                 </span>
               </div>
             )}
@@ -313,9 +332,9 @@ export default function UploadPage() {
             }}
           >
             <span className="flex items-center justify-center gap-2.5">
-              {!preview ? "Upload a photo to continue" : !selected.length ? "Select at least one scenario" : (
+              {!preview ? "Upload a photo to continue" : !selected.length ? "Select at least one scenario" : total === 0 ? "Select 1, 4, or 8 scenarios" : (
                 <>
-                  Continue to Checkout — ${selected.reduce((s, id) => s + 5, 0)}
+                  Continue to Checkout — ${total}
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
                   </svg>
@@ -383,7 +402,7 @@ export default function UploadPage() {
                 style={{ background: "rgba(255,255,255,0.03)", borderTop: `1px solid ${s.accent}25` }}>
                 <div className="flex-1">
                   <p className="text-white text-sm font-semibold">{s.label}</p>
-                  <p className="text-white/35 text-xs">${s.price} per photo</p>
+                  <p className="text-white/35 text-xs">Bundle pricing: 1=$5 · 4=$15 · 8=$30</p>
                 </div>
                 <button
                   onClick={() => { toggle(s.id); setPreviewScenario(null); }}

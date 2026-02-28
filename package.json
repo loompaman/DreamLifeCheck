@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:cf": "next build && npx @opennextjs/cloudflare build && node -e \"const fs=require('fs');const path=require('path');const src=path.join('.open-next','worker.js');const dst=path.join('.open-next','assets','_worker.js');if(!fs.existsSync(src)) throw new Error('Missing '+src);fs.copyFileSync(src,dst);if(fs.existsSync(src+'.map')) fs.copyFileSync(src+'.map', dst+'.map');\"",
-    "deploy": "next build && npx @opennextjs/cloudflare build && node -e \"const fs=require('fs');const path=require('path');const src=path.join('.open-next','worker.js');const dst=path.join('.open-next','assets','_worker.js');if(!fs.existsSync(src)) throw new Error('Missing '+src);fs.copyFileSync(src,dst);if(fs.existsSync(src+'.map')) fs.copyFileSync(src+'.map', dst+'.map');\" && wrangler deploy",
-    "preview": "next build && npx @opennextjs/cloudflare build && node -e \"const fs=require('fs');const path=require('path');const src=path.join('.open-next','worker.js');const dst=path.join('.open-next','assets','_worker.js');if(!fs.existsSync(src)) throw new Error('Missing '+src);fs.copyFileSync(src,dst);if(fs.existsSync(src+'.map')) fs.copyFileSync(src+'.map', dst+'.map');\" && wrangler dev",
+    "build:cf": "next build && npx @opennextjs/cloudflare build",
+    "deploy": "next build && npx @opennextjs/cloudflare build && wrangler deploy",
+    "preview": "next build && npx @opennextjs/cloudflare build && wrangler dev",
     "start": "next start",
     "lint": "eslint"
   },

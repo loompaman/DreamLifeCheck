@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
@@ -18,7 +18,7 @@ const SCENARIO_LABELS: Record<string, { label: string; emoji: string }> = {
 
 type Result = { scenario: string; imageUrl: string };
 
-export default function ConfirmationPage() {
+function ConfirmationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const hasFired = useRef(false);
@@ -265,5 +265,26 @@ export default function ConfirmationPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+function SuspenseFallback() {
+  return (
+    <main className="bg-[#03030a] min-h-screen flex flex-col">
+      <Navbar />
+      <div className="flex-1 flex items-center justify-center px-6">
+        <div className="text-center max-w-sm w-full">
+          <div className="text-white/40 text-sm">Loading...</div>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+export default function ConfirmationPage() {
+  return (
+    <Suspense fallback={<SuspenseFallback />}>
+      <ConfirmationContent />
+    </Suspense>
   );
 }

@@ -25,6 +25,20 @@ copyDirContents(path.join(root, "server-functions"), path.join(out, "server-func
 copyDirContents(path.join(root, ".build"), path.join(out, ".build"));
 copyDirContents(path.join(root, "cache"), path.join(out, "cache"));
 
+// Force asset resolver to use ASSETS binding in Pages advanced mode.
+const initPath = path.join(out, "cloudflare", "init.js");
+if (fs.existsSync(initPath)) {
+  const marker = "__ASSETS_RUN_WORKER_FIRST__";
+  const contents = fs.readFileSync(initPath, "utf8");
+  if (!contents.includes("globalThis.__ASSETS_RUN_WORKER_FIRST__")) {
+    fs.appendFileSync(
+      initPath,
+      `\n// Force static assets to be served via ASSETS binding in Pages\n` +
+        `globalThis.__ASSETS_RUN_WORKER_FIRST__ = true;\n`
+    );
+  }
+}
+
 // Pages requires _worker.js at output root
 const workerSrc = path.join(root, "worker.js");
 const workerDst = path.join(out, "_worker.js");

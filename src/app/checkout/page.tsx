@@ -22,6 +22,12 @@ const PRICE_BY_COUNT: Record<number, number> = {
   8: 30,
 };
 
+const STRIPE_PAYMENT_LINKS: Record<number, string> = {
+  1: "https://buy.stripe.com/eVqcN558T3T06tj5OH8IU0u",
+  4: "https://buy.stripe.com/7sYdR90SD6184lbfph8IU0v",
+  8: "https://buy.stripe.com/28EdR99p94X44lb5OH8IU0w",
+};
+
 const priceForCount = (count: number) => PRICE_BY_COUNT[count] ?? 0;
 
 export default function CheckoutPage() {
@@ -50,14 +56,9 @@ export default function CheckoutPage() {
     if (!preview || !selected.length || total === 0) return;
     setLoading(true); setError(null);
     try {
-      const res = await fetch("/api/stripe/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ scenarios: selected, photo: preview }),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.url) throw new Error(data.error || "Could not start checkout");
-      window.location.href = data.url;
+      const url = STRIPE_PAYMENT_LINKS[count];
+      if (!url) throw new Error("Missing Stripe link for this quantity");
+      window.location.href = url;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
       setLoading(false);

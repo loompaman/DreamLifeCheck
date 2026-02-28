@@ -214,7 +214,7 @@ export default function Hero() {
           <Link href="/upload"
             className="mt-3 flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl text-sm font-semibold text-black transition-all hover:scale-[1.02]"
             style={{ background: "linear-gradient(135deg, #c9a84c, #e8c96a)", boxShadow: "0 0 30px rgba(201,168,76,0.25)" }}>
-            Place me in a scene like this →
+            Upload my photo →
           </Link>
 
           <p className="text-center text-white/20 text-xs mt-3">

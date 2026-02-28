@@ -7,7 +7,6 @@ import Logo from "./Logo";
 const NAV_LINKS = [
   { label: "Demo", href: "#demo" },
   { label: "How It Works", href: "#how-it-works" },
-  { label: "Pricing", href: "/pricing" },
 ];
 
 export default function Navbar() {

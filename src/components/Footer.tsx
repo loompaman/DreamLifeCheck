@@ -20,8 +20,8 @@ export default function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mb-14">
-          {/* Brand — wider */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-14">
+          {/* Brand */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-flex items-center mb-5">
               <Logo size={32} />
@@ -30,53 +30,21 @@ export default function Footer() {
               AI-powered luxury lifestyle visualization. See yourself living the life
               you&apos;ve always dreamed of — before you even build it.
             </p>
-            <div className="flex gap-2">
-              {[
-                { letter: "𝕏", label: "Twitter" },
-                { letter: "in", label: "Instagram" },
-                { letter: "Li", label: "LinkedIn" },
-              ].map((s) => (
-                <a key={s.label} href="#" aria-label={s.label}
-                  className="w-9 h-9 rounded-xl glass flex items-center justify-center text-white/40 hover:text-[#c9a84c] hover:border-[#c9a84c]/25 transition-all text-xs font-bold">
-                  {s.letter}
-                </a>
-              ))}
-            </div>
           </div>
 
-          {/* Product */}
+          {/* Links */}
           <div>
-            <h4 className="text-xs font-semibold text-white/35 uppercase tracking-widest mb-5">Product</h4>
+            <h4 className="text-xs font-semibold text-white/35 uppercase tracking-widest mb-5">Links</h4>
             <ul className="space-y-3">
-              {["Features", "Demo", "Pricing", "Upload Photo"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm text-white/35 hover:text-white/70 transition-colors">{item}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company */}
-          <div>
-            <h4 className="text-xs font-semibold text-white/35 uppercase tracking-widest mb-5">Company</h4>
-            <ul className="space-y-3">
-              {["About", "Blog", "Careers", "Contact"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm text-white/35 hover:text-white/70 transition-colors">{item}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Legal */}
-          <div>
-            <h4 className="text-xs font-semibold text-white/35 uppercase tracking-widest mb-5">Legal</h4>
-            <ul className="space-y-3">
-              {["Privacy Policy", "Terms of Service", "Cookie Policy"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm text-white/35 hover:text-white/70 transition-colors">{item}</a>
-                </li>
-              ))}
+              <li>
+                <a href="#demo" className="text-sm text-white/35 hover:text-white/70 transition-colors">Demo</a>
+              </li>
+              <li>
+                <a href="#how-it-works" className="text-sm text-white/35 hover:text-white/70 transition-colors">How It Works</a>
+              </li>
+              <li>
+                <Link href="/upload" className="text-sm text-white/35 hover:text-white/70 transition-colors">Upload Photo</Link>
+              </li>
             </ul>
           </div>
         </div>

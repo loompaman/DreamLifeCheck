@@ -5,29 +5,16 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 
-const SCENARIO_LABELS: Record<string, { label: string; emoji: string }> = {
-  jet:        { label: "Private Jet",   emoji: "✈️"  },
-  ferrari:    { label: "Supercar",      emoji: "🏎️" },
-  yacht:      { label: "Superyacht",    emoji: "🛥️" },
-  monaco:     { label: "Monaco",        emoji: "🏁"  },
-  club:       { label: "Night Club",    emoji: "🍾"  },
-  racetrack:  { label: "Race Track",    emoji: "🏆"  },
-  restaurant: { label: "Fine Dining",   emoji: "🍽️" },
-  jet2:       { label: "Jet Boarding",  emoji: "🛫"  },
-};
-
-type Result = { scenario: string; imageUrl: string };
-
 function ConfirmationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const hasFired = useRef(false);
 
-  const [results, setResults] = useState<Result[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [uploadedPath, setUploadedPath] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
-  const [statusText, setStatusText] = useState("Preparing your photos...");
+  const [statusText, setStatusText] = useState("Preparing your upload...");
 
   useEffect(() => {
     if (hasFired.current) return;
@@ -45,8 +32,6 @@ function ConfirmationContent() {
           return;
         }
 
-        const scenarios: string[] = JSON.parse(scenariosRaw);
-
         // Confirm payment and upload photo to Supabase
         const confirmRes = await fetch("/api/stripe/confirm", {
           method: "POST",
@@ -57,47 +42,9 @@ function ConfirmationContent() {
         if (!confirmRes.ok) {
           throw new Error(confirmData.error || "Payment confirmation failed");
         }
-
-        // Convert base64 data URL → File
-        const fetchRes = await fetch(photo);
-        const blob = await fetchRes.blob();
-        const file = new File([blob], "photo.jpg", { type: blob.type });
-
-        const formData = new FormData();
-        formData.append("image", file);
-        formData.append("scenarios", JSON.stringify(scenarios));
-
-        // Animate progress while waiting
-        setStatusText("Sending to AI model...");
-        setProgress(10);
-
-        const messages = [
-          "Placing you into the scene...",
-          "Adding luxury details...",
-          "Perfecting the lighting...",
-          "Almost ready...",
-        ];
-        let msgIdx = 0;
-        const interval = setInterval(() => {
-          setProgress((p) => Math.min(p + 3, 88));
-          if (msgIdx < messages.length) {
-            setStatusText(messages[msgIdx++]);
-          }
-        }, 3000);
-
-        const response = await fetch("/api/transform", {
-          method: "POST",
-          body: formData,
-        });
-
-        clearInterval(interval);
+        setUploadedPath(confirmData.path || null);
         setProgress(100);
-        setStatusText("Done!");
-
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || "Generation failed");
-
-        setResults(data.results ?? []);
+        setStatusText("Upload complete!");
 
         // Clear session storage
         sessionStorage.removeItem("uploadedPhoto");
@@ -137,7 +84,7 @@ function ConfirmationContent() {
             </div>
 
             <h2 className="font-serif text-2xl font-bold text-white mb-2">
-              Creating your dream life
+              Securing your order
             </h2>
             <p className="text-white/35 text-sm mb-8">{statusText}</p>
 
@@ -152,7 +99,7 @@ function ConfirmationContent() {
                 }}
               />
             </div>
-            <p className="text-white/20 text-xs">This takes 15–60 seconds · please don&apos;t close this tab</p>
+            <p className="text-white/20 text-xs">Please don&apos;t close this tab</p>
           </div>
         </div>
       </main>
@@ -182,7 +129,7 @@ function ConfirmationContent() {
     );
   }
 
-  /* ── Results ── */
+  /* ── Success ── */
   return (
     <main className="bg-[#03030a] min-h-screen">
       <Navbar />
@@ -196,7 +143,7 @@ function ConfirmationContent() {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-gold mb-5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#c9a84c] animate-pulse" />
-            <span className="text-[#c9a84c] text-xs font-medium uppercase tracking-widest">Your Results</span>
+            <span className="text-[#c9a84c] text-xs font-medium uppercase tracking-widest">Order Confirmed</span>
           </div>
           <h1 className="font-serif text-4xl sm:text-5xl font-bold text-white mb-3 leading-tight">
             Your{" "}
@@ -204,46 +151,28 @@ function ConfirmationContent() {
               background: "linear-gradient(135deg, #c9a84c, #f5e6b8, #c9a84c)",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
             }}>
-              Dream Life
+              Photo
             </span>
           </h1>
-          <p className="text-white/35 text-sm">Long-press on mobile or right-click on desktop to save any photo.</p>
+          <p className="text-white/35 text-sm">
+            We&apos;ve received your photo. We&apos;ll generate your results manually and email them within 24 hours.
+          </p>
         </div>
 
-        {/* Results grid */}
-        <div className={`grid gap-5 ${results.length === 1 ? "grid-cols-1 max-w-sm mx-auto" : "grid-cols-1 sm:grid-cols-2"}`}>
-          {results.map(({ scenario, imageUrl }) => {
-            const meta = SCENARIO_LABELS[scenario] ?? { label: scenario, emoji: "🌟" };
-            return (
-              <div
-                key={scenario}
-                className="rounded-2xl overflow-hidden"
-                style={{ border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 20px 60px rgba(0,0,0,0.5)" }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={imageUrl} alt={meta.label} className="w-full object-cover" />
-                <div className="flex items-center justify-between px-4 py-3"
-                  style={{ background: "rgba(255,255,255,0.02)", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-                  <div className="flex items-center gap-2">
-                    <span className="text-base">{meta.emoji}</span>
-                    <span className="text-white font-medium text-sm">{meta.label}</span>
-                  </div>
-                  <a
-                    href={imageUrl}
-                    download={`dreamlife-${scenario}.jpg`}
-                    className="text-xs px-3 py-1.5 rounded-full transition-colors"
-                    style={{
-                      background: "rgba(201,168,76,0.08)",
-                      border: "1px solid rgba(201,168,76,0.25)",
-                      color: "#c9a84c",
-                    }}
-                  >
-                    Download
-                  </a>
-                </div>
-              </div>
-            );
-          })}
+        {/* Confirmation card */}
+        <div
+          className="max-w-xl mx-auto rounded-2xl p-6 text-center"
+          style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)" }}
+        >
+          <div className="text-4xl mb-3">✅</div>
+          <p className="text-white/70 text-sm">
+            Payment verified and photo uploaded to storage.
+          </p>
+          {uploadedPath && (
+            <p className="text-white/30 text-xs mt-2 break-all">
+              Stored at: {uploadedPath}
+            </p>
+          )}
         </div>
 
         {/* CTA */}
@@ -256,12 +185,12 @@ function ConfirmationContent() {
               boxShadow: "0 0 50px rgba(201,168,76,0.35), 0 5px 30px rgba(0,0,0,0.5)",
             }}
           >
-            Generate More Photos
+            Submit Another Photo
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
             </svg>
           </Link>
-          <p className="text-white/20 text-xs">Share your results with friends 📸</p>
+          <p className="text-white/20 text-xs">We&apos;ll email you when your results are ready.</p>
         </div>
       </div>
     </main>

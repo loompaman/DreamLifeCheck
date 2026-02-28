@@ -28,8 +28,6 @@ const STRIPE_PAYMENT_LINKS: Record<number, string> = {
   4: "https://buy.stripe.com/7sYdR90SD6184lbfph8IU0v",
   8: "https://buy.stripe.com/28EdR99p94X44lb5OH8IU0w",
 };
-const SUBSCRIPTION_LINK = "https://buy.stripe.com/7sY8wP1WH3T07xndh98IU0x";
-
 const priceForCount = (count: number) => PRICE_BY_COUNT[count] ?? 0;
 
 export default function CheckoutPage() {
@@ -84,10 +82,6 @@ export default function CheckoutPage() {
       setError(err instanceof Error ? err.message : "Something went wrong");
       setLoading(false);
     }
-  };
-
-  const handleSubscribe = () => {
-    window.location.href = SUBSCRIPTION_LINK;
   };
 
   if (!preview) return null;
@@ -230,30 +224,6 @@ export default function CheckoutPage() {
             </span>
           )}
         </button>
-
-        {/* Subscription option */}
-        <div className="mt-6 rounded-2xl p-5"
-          style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)" }}>
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg"
-              style={{ background: "rgba(201,168,76,0.12)", border: "1px solid rgba(201,168,76,0.3)" }}>
-              🔁
-            </div>
-            <div className="flex-1">
-              <p className="text-white font-semibold text-sm">Weekly subscription — $9/week</p>
-              <p className="text-white/35 text-xs mt-1">
-                Get a fresh set of images every week. Cancel anytime.
-              </p>
-            </div>
-            <button
-              onClick={handleSubscribe}
-              className="shrink-0 px-4 py-2 rounded-full text-xs font-semibold text-black transition-all hover:scale-[1.03]"
-              style={{ background: "linear-gradient(135deg, #c9a84c, #e8c96a)" }}
-            >
-              Subscribe
-            </button>
-          </div>
-        </div>
 
         <p className="text-center text-white/20 text-xs mt-4">
           Secure payment via Stripe · Photos emailed within 24 hours

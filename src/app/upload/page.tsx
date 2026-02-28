@@ -58,12 +58,7 @@ export default function UploadPage() {
       sessionStorage.setItem("selectedScenarios", JSON.stringify(selected));
       if (file) sessionStorage.setItem("uploadedPhotoName", file.name);
     } catch {}
-    // 1 scenario = free, skip Stripe and go straight to generation
-    if (selected.length === 1) {
-      router.push("/confirmation");
-    } else {
-      router.push("/checkout");
-    }
+    router.push("/checkout");
   };
 
   const canContinue = !!preview && selected.length > 0;
@@ -318,14 +313,7 @@ export default function UploadPage() {
             }}
           >
             <span className="flex items-center justify-center gap-2.5">
-              {!preview ? "Upload a photo to continue" : !selected.length ? "Select at least one scenario" : selected.length === 1 ? (
-                <>
-                  ✨ Generate Free — 1 Photo
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
-                  </svg>
-                </>
-              ) : (
+              {!preview ? "Upload a photo to continue" : !selected.length ? "Select at least one scenario" : (
                 <>
                   Continue to Checkout — ${selected.reduce((s, id) => s + 5, 0)}
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -337,9 +325,7 @@ export default function UploadPage() {
           </button>
 
           <p className="text-center text-white/20 text-xs">
-            {selected.length <= 1
-              ? "1 photo is free · add more scenarios for $5 each"
-              : "Your photo is never stored · results shown instantly"}
+            Your photo is never stored · results shown instantly after payment
           </p>
         </div>
       </div>

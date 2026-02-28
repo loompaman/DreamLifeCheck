@@ -323,7 +323,7 @@ export default function UploadPage() {
           <button
             onClick={handleContinue}
             disabled={!canContinue}
-            className="relative w-full py-4 rounded-full text-base font-semibold text-black overflow-hidden transition-all duration-300 disabled:opacity-35 disabled:cursor-not-allowed hover:scale-[1.01] hover:brightness-110 hover:shadow-[0_0_60px_rgba(201,168,76,0.55)] active:scale-[0.99]"
+            className="group relative w-full py-4 rounded-full text-base font-semibold text-black overflow-hidden transition-all duration-300 disabled:opacity-35 disabled:cursor-not-allowed hover:scale-[1.02] hover:brightness-110 hover:shadow-[0_0_70px_rgba(201,168,76,0.6)] active:scale-[0.99]"
             style={canContinue ? {
               background: "linear-gradient(135deg, #b8923e, #e8c96a, #f5e6b8, #c9a84c)",
               boxShadow: "0 0 50px rgba(201,168,76,0.45), 0 5px 30px rgba(0,0,0,0.5)",
@@ -331,6 +331,7 @@ export default function UploadPage() {
               background: "linear-gradient(135deg, #c9a84c, #e8c96a)",
             }}
           >
+            <span className="absolute inset-0 shimmer-anim opacity-0 group-hover:opacity-100 transition-opacity" />
             <span className="flex items-center justify-center gap-2.5">
               {!preview ? "Upload a photo to continue" : !selected.length ? "Select at least one scenario" : total === 0 ? "Select 1, 4, or 8 scenarios" : (
                 <>

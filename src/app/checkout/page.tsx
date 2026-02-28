@@ -184,12 +184,13 @@ export default function CheckoutPage() {
         <button
           onClick={handlePay}
           disabled={loading || total === 0}
-          className="w-full py-4 rounded-full text-base font-semibold text-black transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-[1.01] hover:brightness-110 hover:shadow-[0_0_60px_rgba(201,168,76,0.55)] active:scale-[0.99]"
+          className="group w-full py-4 rounded-full text-base font-semibold text-black transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-[1.02] hover:brightness-110 hover:shadow-[0_0_70px_rgba(201,168,76,0.6)] active:scale-[0.99]"
           style={{
             background: "linear-gradient(135deg, #b8923e, #e8c96a, #f5e6b8, #c9a84c)",
             boxShadow: "0 0 50px rgba(201,168,76,0.4), 0 5px 30px rgba(0,0,0,0.5)",
           }}
         >
+          <span className="absolute inset-0 shimmer-anim opacity-0 group-hover:opacity-100 transition-opacity" />
           {loading ? (
             <span className="flex items-center justify-center gap-3">
               <div className="gold-spinner" />

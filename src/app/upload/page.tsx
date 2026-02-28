@@ -33,7 +33,7 @@ export default function UploadPage() {
     }
     return null;
   });
-  const [selected, setSelected] = useState<string[]>(["jet", "ferrari"]);
+  const [selected, setSelected] = useState<string[]>(["jet"]);
   const [previewScenario, setPreviewScenario] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);

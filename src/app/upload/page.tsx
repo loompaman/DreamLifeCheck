@@ -323,7 +323,7 @@ export default function UploadPage() {
           <button
             onClick={handleContinue}
             disabled={!canContinue}
-            className="relative w-full py-4 rounded-full text-base font-semibold text-black overflow-hidden transition-all duration-300 disabled:opacity-35 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-[0.99]"
+            className="relative w-full py-4 rounded-full text-base font-semibold text-black overflow-hidden transition-all duration-300 disabled:opacity-35 disabled:cursor-not-allowed hover:scale-[1.01] hover:brightness-110 hover:shadow-[0_0_60px_rgba(201,168,76,0.55)] active:scale-[0.99]"
             style={canContinue ? {
               background: "linear-gradient(135deg, #b8923e, #e8c96a, #f5e6b8, #c9a84c)",
               boxShadow: "0 0 50px rgba(201,168,76,0.45), 0 5px 30px rgba(0,0,0,0.5)",

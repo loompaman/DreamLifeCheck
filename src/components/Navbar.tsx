@@ -58,10 +58,7 @@ export default function Navbar() {
         </div>
 
         {/* CTA */}
-        <div className="hidden md:flex items-center gap-3">
-          <Link href="#" className="text-sm text-white/40 hover:text-white/70 transition-colors px-3 py-2">
-            Sign in
-          </Link>
+        <div className="hidden md:flex items-center">
           <Link
             href="/upload"
             className="relative group overflow-hidden px-5 py-2.5 rounded-full text-sm font-semibold text-black transition-all duration-300 hover:scale-[1.04]"
@@ -75,7 +72,7 @@ export default function Navbar() {
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" stroke="none" />
               </svg>
-              Try Free
+              Upload Photo
             </span>
             <div className="absolute inset-0 shimmer-anim opacity-0 group-hover:opacity-100 transition-opacity" />
           </Link>
@@ -125,7 +122,7 @@ export default function Navbar() {
             className="mt-3 text-center py-3.5 rounded-full text-sm font-semibold text-black"
             style={{ background: "linear-gradient(135deg, #c9a84c, #e8c96a)" }}
           >
-            Upload Your Photo
+            Upload Photo
           </Link>
         </div>
       </div>

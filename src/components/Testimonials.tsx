@@ -2,35 +2,35 @@
 
 const TESTIMONIALS = [
   {
-    quote: "I uploaded a casual selfie and got back a photo of me in a Rolls-Royce that looks so real my friends thought I actually rented one.",
-    name: "Marcus T.",
-    role: "Entrepreneur · Atlanta",
-    avatar: "M",
-    color: "from-violet-500 to-purple-600",
-    stars: 5,
-  },
-  {
-    quote: "The private jet photo is now my LinkedIn banner. Three recruiters reached out thinking I was a CEO. Literally changed my career trajectory.",
-    name: "Sophia K.",
-    role: "Sales Director · London",
-    avatar: "S",
+    quote: "I used the jet shot as a vision board wallpaper. Seeing it every morning keeps me locked in on my goals.",
+    name: "Jordan L.",
+    role: "Founder · Miami",
+    avatar: "J",
     color: "from-amber-400 to-orange-500",
     stars: 5,
   },
   {
-    quote: "I use DreamLifeCheck as my vision board. Seeing myself on a yacht every morning keeps me motivated. Best $19/month I've ever spent.",
-    name: "Ryan O.",
-    role: "Startup Founder · Dubai",
-    avatar: "R",
+    quote: "Posted one on Instagram and people asked where I was. It looks insanely real.",
+    name: "Sofia K.",
+    role: "Creator · LA",
+    avatar: "S",
+    color: "from-rose-400 to-pink-600",
+    stars: 5,
+  },
+  {
+    quote: "I pinned the yacht shot to my mood board. It’s the exact vibe I’m working toward.",
+    name: "Avery M.",
+    role: "Designer · NYC",
+    avatar: "A",
     color: "from-sky-400 to-blue-600",
     stars: 5,
   },
   {
-    quote: "The penthouse NYC photo is absolutely cinematic. The lighting, the reflections — you genuinely cannot tell it's AI. Insane quality.",
-    name: "Aisha M.",
-    role: "Content Creator · NYC",
-    avatar: "A",
-    color: "from-rose-400 to-pink-600",
+    quote: "I keep the supercar image on my lock screen as motivation. It’s a daily reminder.",
+    name: "Kai N.",
+    role: "Sales · Chicago",
+    avatar: "K",
+    color: "from-violet-500 to-purple-600",
     stars: 5,
   },
 ];
@@ -50,7 +50,7 @@ export default function Testimonials() {
             <span className="text-xs text-white/50 uppercase tracking-widest font-medium">Testimonials</span>
           </div>
           <h2 className="font-serif text-4xl sm:text-5xl font-bold text-white leading-tight">
-            They saw it.{" "}
+            They posted it.{" "}
             <span className="italic"
               style={{
                 background: "linear-gradient(135deg, #c9a84c, #f5e6b8, #c9a84c)",
@@ -58,7 +58,7 @@ export default function Testimonials() {
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
               }}>
-              Now they&apos;re building it.
+              Now they&apos;re chasing it.
             </span>
           </h2>
         </div>
@@ -108,4 +108,3 @@ export default function Testimonials() {
     </section>
   );
 }
-

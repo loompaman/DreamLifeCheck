@@ -102,11 +102,11 @@ export default function UploadPage() {
     return new Blob([bytes], { type: mime });
   };
 
-  const handleContinue = async () => {
+  const handleContinue = () => {
     if (!preview || !selected.length) return;
     try {
       const photoFile = file ?? new File([dataUrlToBlob(preview)], "photo.jpg");
-      await saveUploadCache({ photo: photoFile, photoName: photoFile.name, scenarios: selected });
+      saveUploadCache({ photo: photoFile, photoName: photoFile.name, scenarios: selected }).catch(() => {});
     } catch {}
     router.push("/checkout");
   };

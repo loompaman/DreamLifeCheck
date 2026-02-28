@@ -44,7 +44,13 @@ export default function CheckoutPage() {
     let cancelled = false;
     const hydrate = async () => {
       try {
-        const cached = await loadUploadCache();
+        let cached = await loadUploadCache();
+        if (!cached) {
+          for (let i = 0; i < 8 && !cached; i++) {
+            await new Promise((r) => setTimeout(r, 150));
+            cached = await loadUploadCache();
+          }
+        }
         if (!cached || cancelled) { router.replace("/upload"); return; }
         const url = URL.createObjectURL(cached.photo);
         objectUrlRef.current = url;

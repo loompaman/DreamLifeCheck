@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import { saveUploadCache, loadUploadCache, clearUploadCache } from "@/lib/uploadCache";
 
 const SCENARIOS = [
   { id: "jet",        label: "Private Jet",  emoji: "✈️",  desc: "Gulfstream · Dubai Tarmac",  accent: "#38bdf8", price: 5, demo: "/demo-jet-dubai.png" },
@@ -27,26 +28,50 @@ const priceForCount = (count: number) => PRICE_BY_COUNT[count] ?? 0;
 export default function UploadPage() {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(() => {
-    if (typeof window !== "undefined") {
-      return sessionStorage.getItem("uploadedPhoto") || null;
-    }
-    return null;
-  });
+  const [preview, setPreview] = useState<string | null>(null);
   const [selected, setSelected] = useState<string[]>(["jet"]);
   const [previewScenario, setPreviewScenario] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
+  const objectUrlRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const hydrate = async () => {
+      try {
+        const cached = await loadUploadCache();
+        if (!cached || cancelled) return;
+        const url = URL.createObjectURL(cached.photo);
+        objectUrlRef.current = url;
+        setPreview(url);
+        setSelected(cached.scenarios?.length ? cached.scenarios : ["jet"]);
+        setFile(new File([cached.photo], cached.photoName ?? "photo.jpg", { type: cached.photo.type }));
+      } catch {
+        // ignore cache errors
+      }
+    };
+    hydrate();
+    return () => {
+      cancelled = true;
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+        objectUrlRef.current = null;
+      }
+    };
+  }, []);
 
   const handleFile = useCallback((f: File) => {
     if (!f.type.startsWith("image/")) { setError("Please upload a JPG, PNG or WEBP image"); return; }
     if (f.size > 10 * 1024 * 1024) { setError("Image must be under 10MB"); return; }
     setFile(f); setError(null);
+    if (objectUrlRef.current) {
+      URL.revokeObjectURL(objectUrlRef.current);
+      objectUrlRef.current = null;
+    }
     const reader = new FileReader();
     reader.onload = (e) => {
       const result = e.target?.result as string;
       setPreview(result);
-      try { sessionStorage.setItem("uploadedPhoto", result); } catch {}
     };
     reader.readAsDataURL(f);
   }, []);
@@ -67,11 +92,21 @@ export default function UploadPage() {
       return [...p, id];
     });
 
-  const handleContinue = () => {
+  const dataUrlToBlob = (dataUrl: string) => {
+    const [header, data] = dataUrl.split(",");
+    const mimeMatch = /data:(.*?);base64/.exec(header);
+    const mime = mimeMatch ? mimeMatch[1] : "image/jpeg";
+    const binary = atob(data);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return new Blob([bytes], { type: mime });
+  };
+
+  const handleContinue = async () => {
     if (!preview || !selected.length) return;
     try {
-      sessionStorage.setItem("selectedScenarios", JSON.stringify(selected));
-      if (file) sessionStorage.setItem("uploadedPhotoName", file.name);
+      const photoFile = file ?? new File([dataUrlToBlob(preview)], "photo.jpg");
+      await saveUploadCache({ photo: photoFile, photoName: photoFile.name, scenarios: selected });
     } catch {}
     router.push("/checkout");
   };
@@ -188,7 +223,7 @@ export default function UploadPage() {
                     {file ? `${(file.size / 1024 / 1024).toFixed(1)}MB · ` : ""}Ready ✓
                   </p>
                   <button
-                    onClick={() => { setFile(null); setPreview(null); try { sessionStorage.removeItem("uploadedPhoto"); } catch {} }}
+                    onClick={() => { setFile(null); setPreview(null); clearUploadCache().catch(() => {}); }}
                     className="mt-3 text-xs text-white/35 hover:text-white/70 transition-colors flex items-center gap-1.5 group"
                   >
                     <svg className="w-3 h-3 group-hover:rotate-180 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import { loadUploadCache } from "@/lib/uploadCache";
 
 const SCENARIOS: Record<string, { label: string; emoji: string; desc: string; price: number }> = {
   jet:        { label: "Private Jet",  emoji: "✈️",  desc: "Gulfstream · Dubai Tarmac",  price: 5 },
@@ -36,17 +37,30 @@ export default function CheckoutPage() {
   const [selected, setSelected] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const objectUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
-    try {
-      const photo = sessionStorage.getItem("uploadedPhoto");
-      const scenarios = sessionStorage.getItem("selectedScenarios");
-      if (!photo || !scenarios) { router.replace("/upload"); return; }
-      setPreview(photo);
-      setSelected(JSON.parse(scenarios));
-    } catch {
-      router.replace("/upload");
-    }
+    let cancelled = false;
+    const hydrate = async () => {
+      try {
+        const cached = await loadUploadCache();
+        if (!cached || cancelled) { router.replace("/upload"); return; }
+        const url = URL.createObjectURL(cached.photo);
+        objectUrlRef.current = url;
+        setPreview(url);
+        setSelected(cached.scenarios ?? []);
+      } catch {
+        router.replace("/upload");
+      }
+    };
+    hydrate();
+    return () => {
+      cancelled = true;
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+        objectUrlRef.current = null;
+      }
+    };
   }, [router]);
 
   const count = selected.length;

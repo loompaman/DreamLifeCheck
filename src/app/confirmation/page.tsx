@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import { loadUploadCache, clearUploadCache } from "@/lib/uploadCache";
 
 function ConfirmationContent() {
   const router = useRouter();
@@ -22,15 +23,24 @@ function ConfirmationContent() {
 
     const generate = async () => {
       try {
-        const photo = sessionStorage.getItem("uploadedPhoto");
-        const scenariosRaw = sessionStorage.getItem("selectedScenarios");
-        const photoName = sessionStorage.getItem("uploadedPhotoName");
+        const cached = await loadUploadCache();
         const sessionId = searchParams.get("session_id");
 
-        if (!photo || !scenariosRaw || !sessionId) {
+        if (!cached || !sessionId) {
           router.replace("/upload");
           return;
         }
+
+        const toDataUrl = (blob: Blob) =>
+          new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = () => reject(reader.error);
+            reader.readAsDataURL(blob);
+          });
+
+        const photo = await toDataUrl(cached.photo);
+        const photoName = cached.photoName;
 
         // Confirm payment and upload photo to Supabase
         const confirmRes = await fetch("/api/stripe/confirm", {
@@ -46,10 +56,8 @@ function ConfirmationContent() {
         setProgress(100);
         setStatusText("Upload complete!");
 
-        // Clear session storage
-        sessionStorage.removeItem("uploadedPhoto");
-        sessionStorage.removeItem("selectedScenarios");
-        sessionStorage.removeItem("uploadedPhotoName");
+        // Clear cached upload
+        await clearUploadCache();
       } catch (err) {
         setError(err instanceof Error ? err.message : "Something went wrong");
       } finally {

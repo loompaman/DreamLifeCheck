@@ -28,14 +28,13 @@ copyDirContents(path.join(root, "cache"), path.join(out, "cache"));
 // Force asset resolver to use ASSETS binding in Pages advanced mode.
 const initPath = path.join(out, "cloudflare", "init.js");
 if (fs.existsSync(initPath)) {
-  const marker = "__ASSETS_RUN_WORKER_FIRST__";
   const contents = fs.readFileSync(initPath, "utf8");
-  if (!contents.includes("globalThis.__ASSETS_RUN_WORKER_FIRST__")) {
-    fs.appendFileSync(
-      initPath,
-      `\n// Force static assets to be served via ASSETS binding in Pages\n` +
-        `globalThis.__ASSETS_RUN_WORKER_FIRST__ = true;\n`
-    );
+  const updated = contents.replace(
+    /__ASSETS_RUN_WORKER_FIRST__\s*:\s*false/g,
+    "__ASSETS_RUN_WORKER_FIRST__: true"
+  );
+  if (updated !== contents) {
+    fs.writeFileSync(initPath, updated);
   }
 }
 

@@ -4,17 +4,17 @@ import Replicate from "replicate";
 const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN });
 
 const SCENARIO_PROMPTS: Record<string, { positive: string; negative: string }> = {
-  supercar: {
-    positive:
-      "person driving a Lamborghini Huracan on the Amalfi coast road, luxury supercar, cinematic photography, golden hour lighting, ultra-realistic, 8k, bokeh background, professional automotive photography",
-    negative:
-      "cartoon, anime, painting, blurry, low quality, bad anatomy, deformed, ugly, multiple people",
-  },
   jet: {
     positive:
-      "person boarding a Gulfstream G700 private jet on a private airstrip at sunset, luxury aviation, cinematic lighting, ultra realistic photography, 8k, professional",
+      "person boarding a Gulfstream G700 private jet on a private airstrip at sunset in Dubai, luxury aviation, cinematic lighting, ultra realistic photography, 8k, professional",
     negative:
       "cartoon, anime, painting, blurry, low quality, bad anatomy, deformed, crowd, commercial airplane",
+  },
+  ferrari: {
+    positive:
+      "person driving a Ferrari or Lamborghini supercar on a scenic coastal road, luxury supercar, cinematic photography, golden hour lighting, ultra-realistic, 8k, bokeh background",
+    negative:
+      "cartoon, anime, painting, blurry, low quality, bad anatomy, deformed, ugly, multiple people",
   },
   yacht: {
     positive:
@@ -22,23 +22,35 @@ const SCENARIO_PROMPTS: Record<string, { positive: string; negative: string }> =
     negative:
       "cartoon, anime, painting, blurry, low quality, bad anatomy, deformed, crowd, small boat",
   },
-  penthouse: {
+  monaco: {
     positive:
-      "person standing in a luxury penthouse with floor-to-ceiling windows overlooking Manhattan skyline at night, modern interior design, ultra realistic photography, 8k, cinematic",
+      "person at Monaco Casino Square during the Formula 1 Grand Prix, F1 cars in background, luxury lifestyle, ultra realistic photography, 8k, cinematic",
     negative:
-      "cartoon, anime, painting, blurry, low quality, bad anatomy, deformed, daytime",
+      "cartoon, anime, painting, blurry, low quality, bad anatomy, deformed, crowd",
   },
-  fashion: {
+  club: {
     positive:
-      "person wearing luxury haute couture fashion, Patek Philippe watch, Hermès accessories, high fashion editorial photography, professional studio lighting, ultra realistic, 8k",
+      "person at a VIP table in an exclusive luxury nightclub with bottle service and neon lights, ultra realistic photography, 8k, high fashion editorial",
     negative:
-      "cartoon, anime, painting, blurry, low quality, bad anatomy, deformed, casual clothes",
+      "cartoon, anime, painting, blurry, low quality, bad anatomy, deformed",
   },
-  island: {
+  racetrack: {
     positive:
-      "person relaxing on a pristine private island in Maldives, crystal clear turquoise water, white sand beach, overwater bungalow, ultra realistic photography, 8k, golden hour",
+      "person in the F1 paddock at a race track wearing racing gear, Formula 1 pit lane, ultra realistic photography, 8k, professional sports photography",
     negative:
-      "cartoon, anime, painting, blurry, low quality, bad anatomy, deformed, crowd, urban",
+      "cartoon, anime, painting, blurry, low quality, bad anatomy, deformed, crowd",
+  },
+  restaurant: {
+    positive:
+      "person dining at a Michelin star rooftop restaurant overlooking city lights at night, luxury fine dining table setting, ultra realistic photography, 8k",
+    negative:
+      "cartoon, anime, painting, blurry, low quality, bad anatomy, deformed, fast food, casual",
+  },
+  jet2: {
+    positive:
+      "person walking up the airstairs boarding a private jet at golden hour on a private tarmac, luxury aviation lifestyle, cinematic lighting, ultra realistic photography, 8k",
+    negative:
+      "cartoon, anime, painting, blurry, low quality, bad anatomy, deformed, commercial airline terminal",
   },
 };
 

@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:cf": "next build && npx @opennextjs/cloudflare build && node -e \"const fs=require('fs');const path=require('path');const root='.open-next';const copyDir=(src,dst)=>{if(!fs.existsSync(src)) return;fs.mkdirSync(dst,{recursive:true});fs.cpSync(src,dst,{recursive:true});};copyDir('public', root);copyDir(path.join('.next','static'), path.join(root,'_next','static'));const wsrc=path.join(root,'worker.js');const wdst=path.join(root,'_worker.js');if(!fs.existsSync(wsrc)) throw new Error('Missing '+wsrc);fs.copyFileSync(wsrc, wdst);if(fs.existsSync(wsrc+'.map')) fs.copyFileSync(wsrc+'.map', wdst+'.map');\"",
-    "deploy": "next build && npx @opennextjs/cloudflare build && node -e \"const fs=require('fs');const path=require('path');const root='.open-next';const copyDir=(src,dst)=>{if(!fs.existsSync(src)) return;fs.mkdirSync(dst,{recursive:true});fs.cpSync(src,dst,{recursive:true});};copyDir('public', root);copyDir(path.join('.next','static'), path.join(root,'_next','static'));const wsrc=path.join(root,'worker.js');const wdst=path.join(root,'_worker.js');if(!fs.existsSync(wsrc)) throw new Error('Missing '+wsrc);fs.copyFileSync(wsrc, wdst);if(fs.existsSync(wsrc+'.map')) fs.copyFileSync(wsrc+'.map', wdst+'.map');\" && wrangler deploy",
-    "preview": "next build && npx @opennextjs/cloudflare build && node -e \"const fs=require('fs');const path=require('path');const root='.open-next';const copyDir=(src,dst)=>{if(!fs.existsSync(src)) return;fs.mkdirSync(dst,{recursive:true});fs.cpSync(src,dst,{recursive:true});};copyDir('public', root);copyDir(path.join('.next','static'), path.join(root,'_next','static'));const wsrc=path.join(root,'worker.js');const wdst=path.join(root,'_worker.js');if(!fs.existsSync(wsrc)) throw new Error('Missing '+wsrc);fs.copyFileSync(wsrc, wdst);if(fs.existsSync(wsrc+'.map')) fs.copyFileSync(wsrc+'.map', wdst+'.map');\" && wrangler dev",
+    "build:cf": "next build && npx @opennextjs/cloudflare build && node scripts/copy-open-next-assets.cjs",
+    "deploy": "next build && npx @opennextjs/cloudflare build && node scripts/copy-open-next-assets.cjs && wrangler deploy",
+    "preview": "next build && npx @opennextjs/cloudflare build && node scripts/copy-open-next-assets.cjs && wrangler dev",
     "start": "next start",
     "lint": "eslint"
   },

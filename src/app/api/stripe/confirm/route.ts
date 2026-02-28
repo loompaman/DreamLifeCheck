@@ -33,6 +33,11 @@ function safeFilename(name: string | null | undefined) {
   return name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 80);
 }
 
+function safeEmailPath(email: string | null | undefined) {
+  if (!email) return "unknown";
+  return email.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "_").slice(0, 80);
+}
+
 export async function POST(req: NextRequest) {
   const stripeKey = process.env.STRIPE_SECRET_KEY;
   if (!stripeKey) {
@@ -59,7 +64,10 @@ export async function POST(req: NextRequest) {
     const { mime, buffer } = parseDataUrl(photo);
     const ext = extFromMime(mime);
     const name = safeFilename(photoName);
-    const path = `orders/${sessionId}/${Date.now()}-${name}.${ext}`;
+    const emailPath = safeEmailPath(
+      session.customer_details?.email || session.customer_email || null
+    );
+    const path = `orders/${emailPath}/${sessionId}/${Date.now()}-${name}.${ext}`;
 
     const uploadRes = await fetch(
       `${supabaseUrl}/storage/v1/object/${BUCKET}/${path}`,
